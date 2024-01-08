@@ -11,10 +11,10 @@ import FoundationNetworking
 ///
 /// ### API calls
 ///
-/// Each API endpoint (or *operation*) is exposed as a method. For instance, the 'getAll' operation is exposed as:
+/// Each API endpoint (or *operation*) is exposed as a method. For instance, the 'get_/stream' operation is exposed as:
 ///
 /// ```swift
-/// func getAll(request: Operations.GetAllRequest) async throws -> Response<Operations.GetAllResponse>
+/// func getStream(request: Operations.GetStreamRequest) async throws -> Response<Operations.GetStreamResponse>
 /// ```
 ///
 /// ### Request and response objects
@@ -23,10 +23,10 @@ import FoundationNetworking
 ///
 /// Each API method also returns a ``Response`` object, which provides information about the result of making the API request. It is generic and parameterised by the resulting data — stored in the ``Response/data`` property — which is determined by each API operation.
 ///
-/// The ``Response/data`` property defined by each API operation is an enum, and you can `switch` on this value to extract the corresponding value from the response. For example, the 'getAll' operation returns a ``Operations/GetAllResponse`` value:
+/// The ``Response/data`` property defined by each API operation is an enum, and you can `switch` on this value to extract the corresponding value from the response. For example, the 'get_/stream' operation returns a ``Operations/GetStreamResponse`` value:
 ///
 /// ```swift
-/// let response: Response<Operations.GetAllResponse> = ... // Response from API call
+/// let response: Response<Operations.GetStreamResponse> = ... // Response from API call
 /// switch response.data {
 /// case .classes(let classes):
 ///     // Handle response
@@ -56,22 +56,58 @@ import FoundationNetworking
 ///
 /// These methods allow you to make requests to the API.
 ///
-///
-/// ### Scoped API calls
-///
-/// These properties logically group other parts of the API.
-///
-/// - ``stream``
-/// - ``multistreamTarget``
-/// - ``webhook``
-/// - ``asset``
-/// - ``room``
-/// - ``metrics``
-/// - ``session``
-/// - ``accessControl``
-/// - ``task``
-/// - ``transcode``
-/// - ``playback``
+/// - ``getStream(request:)``
+/// - ``postStream(request:)``
+/// - ``deleteStreamId(request:)``
+/// - ``getStreamId(request:)``
+/// - ``patchStreamId(request:)``
+/// - ``deleteStreamIdTerminate(request:)``
+/// - ``getMultistreamTarget()``
+/// - ``postMultistreamTarget(request:)``
+/// - ``deleteMultistreamTargetId(request:)``
+/// - ``getMultistreamTargetId(request:)``
+/// - ``patchMultistreamTargetId(request:)``
+/// - ``getWebhook()``
+/// - ``postWebhook()``
+/// - ``deleteWebhookId(request:)``
+/// - ``getWebhookId(request:)``
+/// - ``putWebhookId(request:)``
+/// - ``getAsset()``
+/// - ``postAssetRequestUpload(request:)``
+/// - ``postAssetUploadUrl(request:)``
+/// - ``deleteAssetAssetId(request:)``
+/// - ``getAssetAssetId(request:)``
+/// - ``patchAssetAssetId(request:)``
+/// - ``postClip(request:)``
+/// - ``getStreamIdClips(request:)``
+/// - ``postStreamIdCreateMultistreamTarget(request:)``
+/// - ``deleteStreamIdMultistreamTargetId(request:)``
+/// - ``getSessionIdClips(request:)``
+/// - ``postRoom()``
+/// - ``deleteRoomId(request:)``
+/// - ``getRoomId(request:)``
+/// - ``deleteRoomIdEgress(request:)``
+/// - ``postRoomIdEgress(request:)``
+/// - ``postRoomIdUser(request:)``
+/// - ``deleteRoomIdUserUserId(request:)``
+/// - ``getRoomIdUserUserId(request:)``
+/// - ``putRoomIdUserUserId(request:)``
+/// - ``getDataViewsQuery(request:)``
+/// - ``getDataViewsQueryCreator(request:)``
+/// - ``getDataViewsQueryTotalPlaybackId(request:)``
+/// - ``getDataUsageQuery(request:)``
+/// - ``getSession()``
+/// - ``getSessionId(request:)``
+/// - ``getStreamParentIdSessions(request:)``
+/// - ``getAccessControlSigningKey()``
+/// - ``postAccessControlSigningKey()``
+/// - ``deleteAccessControlSigningKeyKeyId(request:)``
+/// - ``getAccessControlSigningKeyKeyId(request:)``
+/// - ``patchAccessControlSigningKeyKeyId(request:)``
+/// - ``getTask()``
+/// - ``getTaskTaskId(request:)``
+/// - ``postTranscode(request:)``
+/// - ``getPlaybackId(request:)``
 ///
 public final class Client {
     internal struct APIResponse {

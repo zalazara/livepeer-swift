@@ -3,6 +3,8 @@ generation:
   comments: {}
   sdkClassName: Livepeer
   maintainOpenAPIOrder: true
+  usageSnippets:
+    optionalPropertyRendering: withExample
 features:
   swift:
     core: 3.0.2
@@ -10,7 +12,7 @@ features:
     globalServerURLs: 2.82.0
     inputOutputModels: 2.82.0
 swift:
-  version: 0.0.1
+  version: 0.0.2
   author: Livepeer
   description: Swift library for the Livepeer API.
   imports:

@@ -6,13 +6,13 @@ extension Shared {
     /// HLS output format
     public struct Hls {
         /// Path for the HLS output
-        public let path: String?
+        public let path: String
 
         /// Creates an object with the specified parameters
         ///
         /// - Parameter path: Path for the HLS output
         ///
-        public init(path: String? = nil) {
+        public init(path: String) {
             self.path = path
         }
     }

@@ -8,7 +8,7 @@ extension Shared {
         /// References to targets where this stream will be simultaneously
         /// streamed to
         /// 
-        public let targets: [Shared.Targets]?
+        public let targets: [Shared.Target]?
 
         /// Creates an object with the specified parameters
         ///
@@ -16,7 +16,7 @@ extension Shared {
         /// streamed to
         /// 
         ///
-        public init(targets: [Shared.Targets]? = nil) {
+        public init(targets: [Shared.Target]? = nil) {
             self.targets = targets
         }
     }

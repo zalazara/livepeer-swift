@@ -7,16 +7,20 @@ extension Shared {
     public struct RoomUserUpdatePayload {
         /// Whether a user is allowed to publish audio/video tracks (i.e. their microphone and webcam)
         public let canPublish: Bool?
+        /// Whether a user is allowed to publish data messages to the room
+        public let canPublishData: Bool?
         /// User defined payload to store for the participant
         public let metadata: String?
 
         /// Creates an object with the specified parameters
         ///
         /// - Parameter canPublish: Whether a user is allowed to publish audio/video tracks (i.e. their microphone and webcam)
+        /// - Parameter canPublishData: Whether a user is allowed to publish data messages to the room
         /// - Parameter metadata: User defined payload to store for the participant
         ///
-        public init(canPublish: Bool? = nil, metadata: String? = nil) {
+        public init(canPublish: Bool? = nil, canPublishData: Bool? = nil, metadata: String? = nil) {
             self.canPublish = canPublish
+            self.canPublishData = canPublishData
             self.metadata = metadata
         }
     }
@@ -25,6 +29,7 @@ extension Shared {
 extension Shared.RoomUserUpdatePayload: Codable {
     enum CodingKeys: String, CodingKey {
         case canPublish
+        case canPublishData
         case metadata
     }
 }

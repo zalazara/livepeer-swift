@@ -14,11 +14,16 @@ extension Shared {
         public let fpsDen: Int?
         public let gop: String?
         public let profile: Shared.Profile?
+        /// Restricts the size of the output video using the constant quality feature. Increasing this value will result in a lower quality video. Note that this parameter might not work if the transcoder lacks support for it.
+        /// 
+        public let quality: Int?
 
         /// Creates an object with the specified parameters
         ///
+        /// - Parameter quality: Restricts the size of the output video using the constant quality feature. Increasing this value will result in a lower quality video. Note that this parameter might not work if the transcoder lacks support for it.
+        /// 
         ///
-        public init(bitrate: Int, fps: Int, height: Int, name: String, width: Int, encoder: Shared.Encoder? = nil, fpsDen: Int? = nil, gop: String? = nil, profile: Shared.Profile? = nil) {
+        public init(bitrate: Int, fps: Int, height: Int, name: String, width: Int, encoder: Shared.Encoder? = nil, fpsDen: Int? = nil, gop: String? = nil, profile: Shared.Profile? = nil, quality: Int? = nil) {
             self.bitrate = bitrate
             self.fps = fps
             self.height = height
@@ -28,6 +33,7 @@ extension Shared {
             self.fpsDen = fpsDen
             self.gop = gop
             self.profile = profile
+            self.quality = quality
         }
     }
 }
@@ -43,6 +49,7 @@ extension Shared.FfmpegProfile: Codable {
         case fpsDen
         case gop
         case profile
+        case quality
     }
 }
 

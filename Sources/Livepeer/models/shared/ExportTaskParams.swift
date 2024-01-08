@@ -5,15 +5,15 @@ import Foundation
 extension Shared {
     /// A model object
     public enum ExportTaskParams {
-        case exportTaskParamsSchemas1(Shared.ExportTaskParamsSchemas1)
+        case exportTaskParams1(Shared.ExportTaskParams1)
         case exportTaskParams2(Shared.ExportTaskParams2)
     }
 }
 
 extension Shared.ExportTaskParams: Codable {
     public init(from decoder: Decoder) throws {
-        if let value = try? Shared.ExportTaskParamsSchemas1(from: decoder) {
-            self = .exportTaskParamsSchemas1(value)
+        if let value = try? Shared.ExportTaskParams1(from: decoder) {
+            self = .exportTaskParams1(value)
         } else if let value = try? Shared.ExportTaskParams2(from: decoder) {
             self = .exportTaskParams2(value)
         } else {
@@ -23,7 +23,7 @@ extension Shared.ExportTaskParams: Codable {
 
     public func encode(to encoder: Encoder) throws {
         switch self {
-        case .exportTaskParamsSchemas1(let value):
+        case .exportTaskParams1(let value):
             try value.encode(to: encoder)
         case .exportTaskParams2(let value):
             try value.encode(to: encoder)

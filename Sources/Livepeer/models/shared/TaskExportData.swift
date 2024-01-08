@@ -3,37 +3,22 @@
 import Foundation
 
 extension Shared {
-    /// Parameters for the export-data task
+    /// Output of the export data task
     public struct TaskExportData {
-        /// File content to store into IPFS
-        public let content: Shared.Content
-        /// Optional ID of the content
-        public let id: String?
-        public let ipfs: Shared.IpfsExportParams1?
-        /// Optional type of content
-        public let type: String?
+        public let ipfs: Shared.TaskSchemasIpfs?
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter content: File content to store into IPFS
-        /// - Parameter id: Optional ID of the content
-        /// - Parameter type: Optional type of content
         ///
-        public init(content: Shared.Content, id: String? = nil, ipfs: Shared.IpfsExportParams1? = nil, type: String? = nil) {
-            self.content = content
-            self.id = id
+        public init(ipfs: Shared.TaskSchemasIpfs? = nil) {
             self.ipfs = ipfs
-            self.type = type
         }
     }
 }
 
 extension Shared.TaskExportData: Codable {
     enum CodingKeys: String, CodingKey {
-        case content
-        case id
         case ipfs
-        case type
     }
 }
 

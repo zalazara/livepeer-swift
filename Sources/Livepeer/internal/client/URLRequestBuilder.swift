@@ -62,7 +62,7 @@ final class URLRequestBuilder: URLRequestConfiguration {
             urlRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
         }
 
-        urlRequest.setValue("speakeasy-sdk/swift 0.0.1 2.185.0 1.0.0 Livepeer", forHTTPHeaderField: telemetryHeader.headerName)
+        urlRequest.setValue("speakeasy-sdk/swift 0.0.1 2.188.3 1.0.0 Livepeer", forHTTPHeaderField: telemetryHeader.headerName)
 
         addSecurityParameters(to: &urlRequest)
 

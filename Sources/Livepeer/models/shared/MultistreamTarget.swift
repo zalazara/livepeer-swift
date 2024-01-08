@@ -5,7 +5,9 @@ import Foundation
 extension Shared {
     /// A model object
     public struct MultistreamTarget {
-        /// Timestamp (in milliseconds) at which multistream target object was created
+        /// Timestamp (in milliseconds) at which multistream target object was
+        /// created
+        /// 
         @DecimalSerialized
         public private(set) var createdAt: Double?
         /// If true then this multistream target will not be used for pushing
@@ -17,7 +19,9 @@ extension Shared {
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter createdAt: Timestamp (in milliseconds) at which multistream target object was created
+        /// - Parameter createdAt: Timestamp (in milliseconds) at which multistream target object was
+        /// created
+        /// 
         /// - Parameter disabled: If true then this multistream target will not be used for pushing
         /// even if it is configured in a stream object.
         /// 

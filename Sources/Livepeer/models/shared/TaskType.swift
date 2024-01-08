@@ -6,10 +6,8 @@ extension Shared {
     /// Type of the task
     public enum TaskType: String, Codable, APIValue {
         case upload = "upload"
-        case `import` = "import"
         case export = "export"
         case exportData = "export-data"
-        case transcode = "transcode"
         case transcodeFile = "transcode-file"
         case clip = "clip"
     }

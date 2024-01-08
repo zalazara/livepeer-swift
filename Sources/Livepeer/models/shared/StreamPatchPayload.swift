@@ -9,6 +9,7 @@ extension Shared {
         public let multistream: Shared.Multistream?
         /// Whether the playback policy for a asset or stream is public or signed
         public let playbackPolicy: Shared.PlaybackPolicy?
+        public let profiles: [Shared.FfmpegProfile]?
         /// Should this stream be recorded? Uses default settings. For more
         /// customization, create and configure an object store.
         /// 
@@ -24,10 +25,11 @@ extension Shared {
         /// 
         /// - Parameter suspended: If currently suspended
         ///
-        public init(creatorId: Shared.InputCreatorId? = nil, multistream: Shared.Multistream? = nil, playbackPolicy: Shared.PlaybackPolicy? = nil, record: Bool? = nil, suspended: Bool? = nil) {
+        public init(creatorId: Shared.InputCreatorId? = nil, multistream: Shared.Multistream? = nil, playbackPolicy: Shared.PlaybackPolicy? = nil, profiles: [Shared.FfmpegProfile]? = nil, record: Bool? = nil, suspended: Bool? = nil) {
             self.creatorId = creatorId
             self.multistream = multistream
             self.playbackPolicy = playbackPolicy
+            self.profiles = profiles
             self.record = record
             self.suspended = suspended
         }
@@ -39,6 +41,7 @@ extension Shared.StreamPatchPayload: Codable {
         case creatorId
         case multistream
         case playbackPolicy
+        case profiles
         case record
         case suspended
     }

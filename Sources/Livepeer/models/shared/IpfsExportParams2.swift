@@ -9,17 +9,13 @@ extension Shared {
     public struct IpfsExportParams2 {
         /// Will be added to the pinata_api_key header.
         public let apiKey: String
-        /// Will be added to the pinata_secret_api_key header.
-        public let apiSecret: String
 
         /// Creates an object with the specified parameters
         ///
         /// - Parameter apiKey: Will be added to the pinata_api_key header.
-        /// - Parameter apiSecret: Will be added to the pinata_secret_api_key header.
         ///
-        public init(apiKey: String, apiSecret: String) {
+        public init(apiKey: String) {
             self.apiKey = apiKey
-            self.apiSecret = apiSecret
         }
     }
 }
@@ -27,7 +23,6 @@ extension Shared {
 extension Shared.IpfsExportParams2: Codable {
     enum CodingKeys: String, CodingKey {
         case apiKey
-        case apiSecret
     }
 }
 

@@ -4,55 +4,2134 @@ import Foundation
 
 extension Client: LivepeerAPI {
     // MARK: - Root operations 
-
-    // MARK: - Scoped API operations
-
-    public var stream: StreamAPI {
-        return _StreamAPI(client: self)
+    
+    /// Retrieve streams
+    /// 
+    /// - Parameter request: A ``Operations/GetStreamRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getStream(request: Operations.GetStreamRequest) async throws -> Response<Operations.GetStreamResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetStreamRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetStreamResponse
+        )
+    }
+    
+    /// The only parameter you are required to set is the name of your stream,
+    /// but we also highly recommend that you define transcoding profiles
+    /// parameter that suits your specific broadcasting configuration.
+    /// \
+    /// \
+    /// If you do not define transcoding rendition profiles when creating the
+    /// stream, a default set of profiles will be used. These profiles include
+    /// 240p,  360p, 480p and 720p.
+    /// \
+    /// \
+    /// The playback policy is set to public by default for new streams. It can
+    /// also be added upon the creation of a new stream by adding
+    /// `"playbackPolicy": {"type": "jwt"}`
+    /// 
+    /// 
+    /// - Parameter request: A ``Shared/NewStreamPayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostStreamResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postStream(request: Shared.NewStreamPayload) async throws -> Response<Operations.PostStreamResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostStreamRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostStreamResponse
+        )
+    }
+    
+    /// 
+    /// This will also suspend any active stream sessions, so make sure to wait
+    /// until the stream has finished. To explicitly interrupt an active
+    /// session, consider instead updating the suspended field in the stream
+    /// using the PATCH stream API.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/DeleteStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteStreamId(request: Operations.DeleteStreamIdRequest) async throws -> Response<Operations.DeleteStreamIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteStreamIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteStreamIdResponse
+        )
+    }
+    
+    /// Retrieve a stream
+    /// 
+    /// - Parameter request: A ``Operations/GetStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getStreamId(request: Operations.GetStreamIdRequest) async throws -> Response<Operations.GetStreamIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetStreamIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetStreamIdResponse
+        )
+    }
+    
+    /// Update a stream
+    /// 
+    /// - Parameter request: A ``Operations/PatchStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchStreamIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func patchStreamId(request: Operations.PatchStreamIdRequest) async throws -> Response<Operations.PatchStreamIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePatchStreamIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePatchStreamIdResponse
+        )
+    }
+    
+    /// `DELETE /stream/{id}/terminate` can be used to terminate an ongoing
+    /// session on a live stream. Unlike suspending the stream, it allows the
+    /// streamer to restart streaming even immediately, but it will force
+    /// terminate the current session and stop the recording.
+    /// \
+    /// \
+    /// A 204 No Content status response indicates the stream was successfully
+    /// terminated.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/DeleteStreamIdTerminateRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdTerminateResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteStreamIdTerminate(request: Operations.DeleteStreamIdTerminateRequest) async throws -> Response<Operations.DeleteStreamIdTerminateResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteStreamIdTerminateRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteStreamIdTerminateResponse
+        )
+    }
+    
+    /// Retrieve Multistream Targets
+    /// 
+    /// - Returns: A ``Operations/GetMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getMultistreamTarget() async throws -> Response<Operations.GetMultistreamTargetResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetMultistreamTargetRequest(with: configuration)
+            },
+            handleResponse: handleGetMultistreamTargetResponse
+        )
+    }
+    
+    /// Create a multistream target
+    /// 
+    /// - Parameter request: A ``Shared/MultistreamTargetInput`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postMultistreamTarget(request: Shared.MultistreamTargetInput) async throws -> Response<Operations.PostMultistreamTargetResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostMultistreamTargetRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostMultistreamTargetResponse
+        )
+    }
+    
+    /// Make sure to remove any references to the target on existing
+    /// streams before actually deleting it from the API.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/DeleteMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteMultistreamTargetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteMultistreamTargetId(request: Operations.DeleteMultistreamTargetIdRequest) async throws -> Response<Operations.DeleteMultistreamTargetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteMultistreamTargetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteMultistreamTargetIdResponse
+        )
+    }
+    
+    /// Retrieve a multistream target
+    /// 
+    /// - Parameter request: A ``Operations/GetMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetMultistreamTargetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getMultistreamTargetId(request: Operations.GetMultistreamTargetIdRequest) async throws -> Response<Operations.GetMultistreamTargetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetMultistreamTargetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetMultistreamTargetIdResponse
+        )
+    }
+    
+    /// Update Multistream Target
+    /// 
+    /// - Parameter request: A ``Operations/PatchMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchMultistreamTargetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func patchMultistreamTargetId(request: Operations.PatchMultistreamTargetIdRequest) async throws -> Response<Operations.PatchMultistreamTargetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePatchMultistreamTargetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePatchMultistreamTargetIdResponse
+        )
+    }
+    
+    /// Retrieve a Webhook
+    /// 
+    /// - Returns: A ``Operations/GetWebhookResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getWebhook() async throws -> Response<Operations.GetWebhookResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetWebhookRequest(with: configuration)
+            },
+            handleResponse: handleGetWebhookResponse
+        )
+    }
+    
+    /// To create a new webhook, you need to make an API call with the events you want to listen for and the URL that will be called when those events occur.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostWebhookResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postWebhook() async throws -> Response<Operations.PostWebhookResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostWebhookRequest(with: configuration)
+            },
+            handleResponse: handlePostWebhookResponse
+        )
+    }
+    
+    /// Delete a webhook
+    /// 
+    /// - Parameter request: A ``Operations/DeleteWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteWebhookIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteWebhookId(request: Operations.DeleteWebhookIdRequest) async throws -> Response<Operations.DeleteWebhookIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteWebhookIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteWebhookIdResponse
+        )
+    }
+    
+    /// Retrieve a webhook
+    /// 
+    /// - Parameter request: A ``Operations/GetWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetWebhookIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getWebhookId(request: Operations.GetWebhookIdRequest) async throws -> Response<Operations.GetWebhookIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetWebhookIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetWebhookIdResponse
+        )
+    }
+    
+    /// Update a webhook
+    /// 
+    /// - Parameter request: A ``Operations/PutWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PutWebhookIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func putWebhookId(request: Operations.PutWebhookIdRequest) async throws -> Response<Operations.PutWebhookIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePutWebhookIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePutWebhookIdResponse
+        )
+    }
+    
+    /// Retrieve assets
+    /// 
+    /// - Returns: A ``Operations/GetAssetResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getAsset() async throws -> Response<Operations.GetAssetResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetAssetRequest(with: configuration)
+            },
+            handleResponse: handleGetAssetResponse
+        )
+    }
+    
+    /// To upload an asset, your first need to request for a direct upload URL
+    /// and only then actually upload the contents of the asset.
+    /// \
+    /// \
+    /// Once you created a upload link, you have 2 options, resumable or direct
+    /// upload. For a more reliable experience, you should use resumable uploads
+    /// which will work better for users with unreliable or slow network
+    /// connections. If you want a simpler implementation though, you should
+    /// just use a direct upload.
+    /// 
+    /// 
+    /// ## Direct Upload
+    /// For a direct upload, make a PUT request to the URL received in the url
+    /// field of the response above, with the raw video file as the request
+    /// body. response above:
+    /// 
+    /// 
+    /// ## Resumable Upload
+    /// Livepeer supports resumable uploads via Tus. This section provides a
+    /// simple example of how to use tus-js-client to upload a video file.
+    /// \
+    /// \
+    /// From the previous section, we generated a URL to upload a video file to
+    /// Livepeer on POST /api/asset/request-upload. You should use the
+    /// tusEndpoint field of the response to upload the video file and track the
+    /// progress:
+    /// 
+    /// ``` 
+    /// # This assumes there is an `input` element of `type="file"` with id
+    /// `fileInput` in the HTML
+    /// 
+    /// 
+    /// const input = document.getElementById('fileInput');
+    /// 
+    /// const file = input.files[0];
+    /// 
+    /// const upload = new tus.Upload(file, {
+    ///   endpoint: tusEndpoint, // URL from `tusEndpoint` field in the
+    /// `/request-upload` response
+    ///   metadata: {
+    ///     filename,
+    ///     filetype: 'video/mp4',
+    ///   },
+    ///   uploadSize: file.size,
+    ///   onError(err) {
+    ///     console.error('Error uploading file:', err);
+    ///   },
+    ///   onProgress(bytesUploaded, bytesTotal) {
+    ///     const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+    ///     console.log('Uploaded ' + percentage + '%');
+    ///   },
+    ///   onSuccess() {
+    ///     console.log('Upload finished:', upload.url);
+    ///   },
+    /// });
+    /// 
+    /// const previousUploads = await upload.findPreviousUploads();
+    /// 
+    /// if (previousUploads.length > 0) {
+    ///   upload.resumeFromPreviousUpload(previousUploads[0]);
+    /// }
+    /// 
+    /// upload.start();
+    /// 
+    /// ```
+    /// 
+    /// > Note: If you are using tus from node.js, you need to add a custom URL
+    /// storage to enable resuming from previous uploads. On the browser, this
+    /// is enabled by default using local storage. In node.js, add urlStorage:
+    /// new tus.FileUrlStorage("path/to/tmp/file"), to the UploadFile object
+    /// definition above.
+    /// 
+    /// 
+    /// - Parameter request: A ``Shared/NewAssetPayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostAssetRequestUploadResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postAssetRequestUpload(request: Shared.NewAssetPayload) async throws -> Response<Operations.PostAssetRequestUploadResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostAssetRequestUploadRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostAssetRequestUploadResponse
+        )
+    }
+    
+    /// Upload asset via URL
+    /// 
+    /// - Parameter request: A ``Shared/NewAssetPayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostAssetUploadUrlResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postAssetUploadUrl(request: Shared.NewAssetPayload) async throws -> Response<Operations.PostAssetUploadUrlResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostAssetUploadUrlRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostAssetUploadUrlResponse
+        )
+    }
+    
+    /// Delete an asset
+    /// 
+    /// - Parameter request: A ``Operations/DeleteAssetAssetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteAssetAssetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteAssetAssetId(request: Operations.DeleteAssetAssetIdRequest) async throws -> Response<Operations.DeleteAssetAssetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteAssetAssetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteAssetAssetIdResponse
+        )
+    }
+    
+    /// Retrieves an asset
+    /// 
+    /// - Parameter request: A ``Operations/GetAssetAssetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetAssetAssetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getAssetAssetId(request: Operations.GetAssetAssetIdRequest) async throws -> Response<Operations.GetAssetAssetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetAssetAssetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetAssetAssetIdResponse
+        )
+    }
+    
+    /// Patch an asset
+    /// 
+    /// - Parameter request: A ``Operations/PatchAssetAssetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchAssetAssetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func patchAssetAssetId(request: Operations.PatchAssetAssetIdRequest) async throws -> Response<Operations.PatchAssetAssetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePatchAssetAssetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePatchAssetAssetIdResponse
+        )
+    }
+    
+    /// Create a clip
+    /// 
+    /// - Parameter request: A ``Shared/ClipPayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostClipResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postClip(request: Shared.ClipPayload) async throws -> Response<Operations.PostClipResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostClipRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostClipResponse
+        )
+    }
+    
+    /// Retrieve clips of a livestream
+    /// 
+    /// - Parameter request: A ``Operations/GetStreamIdClipsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamIdClipsResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getStreamIdClips(request: Operations.GetStreamIdClipsRequest) async throws -> Response<Operations.GetStreamIdClipsResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetStreamIdClipsRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetStreamIdClipsResponse
+        )
+    }
+    
+    /// Add a multistream target
+    /// 
+    /// - Parameter request: A ``Operations/PostStreamIdCreateMultistreamTargetRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostStreamIdCreateMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postStreamIdCreateMultistreamTarget(request: Operations.PostStreamIdCreateMultistreamTargetRequest) async throws -> Response<Operations.PostStreamIdCreateMultistreamTargetResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostStreamIdCreateMultistreamTargetRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostStreamIdCreateMultistreamTargetResponse
+        )
+    }
+    
+    /// Remove a multistream target
+    /// 
+    /// - Parameter request: A ``Operations/DeleteStreamIdMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdMultistreamTargetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteStreamIdMultistreamTargetId(request: Operations.DeleteStreamIdMultistreamTargetIdRequest) async throws -> Response<Operations.DeleteStreamIdMultistreamTargetIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteStreamIdMultistreamTargetIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteStreamIdMultistreamTargetIdResponse
+        )
+    }
+    
+    /// Retrieve clips of a session
+    /// 
+    /// - Parameter request: A ``Operations/GetSessionIdClipsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetSessionIdClipsResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getSessionIdClips(request: Operations.GetSessionIdClipsRequest) async throws -> Response<Operations.GetSessionIdClipsResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetSessionIdClipsRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetSessionIdClipsResponse
+        )
+    }
+    
+    /// Create a multiparticipant livestreaming room.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostRoomResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postRoom() async throws -> Response<Operations.PostRoomResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostRoomRequest(with: configuration)
+            },
+            handleResponse: handlePostRoomResponse
+        )
+    }
+    
+    /// Delete a room
+    /// 
+    /// - Parameter request: A ``Operations/DeleteRoomIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteRoomId(request: Operations.DeleteRoomIdRequest) async throws -> Response<Operations.DeleteRoomIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteRoomIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteRoomIdResponse
+        )
+    }
+    
+    /// Retrieve a room
+    /// 
+    /// - Parameter request: A ``Operations/GetRoomIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetRoomIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getRoomId(request: Operations.GetRoomIdRequest) async throws -> Response<Operations.GetRoomIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetRoomIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetRoomIdResponse
+        )
+    }
+    
+    /// Stop room RTMP egress
+    /// 
+    /// - Parameter request: A ``Operations/DeleteRoomIdEgressRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdEgressResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteRoomIdEgress(request: Operations.DeleteRoomIdEgressRequest) async throws -> Response<Operations.DeleteRoomIdEgressResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteRoomIdEgressRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteRoomIdEgressResponse
+        )
+    }
+    
+    /// Create a livestream for your room.
+    /// This allows you to leverage livestreaming features like recording and HLS output.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/PostRoomIdEgressRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostRoomIdEgressResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postRoomIdEgress(request: Operations.PostRoomIdEgressRequest) async throws -> Response<Operations.PostRoomIdEgressResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostRoomIdEgressRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostRoomIdEgressResponse
+        )
+    }
+    
+    /// Call this endpoint to add a user to a room, specifying a display name at a minimum.
+    /// The response will contain a joining URL for Livepeer's default meeting app.
+    /// Alternatively the joining token can be used with a custom app.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/PostRoomIdUserRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostRoomIdUserResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postRoomIdUser(request: Operations.PostRoomIdUserRequest) async throws -> Response<Operations.PostRoomIdUserResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostRoomIdUserRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostRoomIdUserResponse
+        )
+    }
+    
+    /// Remove a user from the room
+    /// 
+    /// - Parameter request: A ``Operations/DeleteRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdUserUserIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteRoomIdUserUserId(request: Operations.DeleteRoomIdUserUserIdRequest) async throws -> Response<Operations.DeleteRoomIdUserUserIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteRoomIdUserUserIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteRoomIdUserUserIdResponse
+        )
+    }
+    
+    /// Get user details
+    /// 
+    /// - Parameter request: A ``Operations/GetRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetRoomIdUserUserIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getRoomIdUserUserId(request: Operations.GetRoomIdUserUserIdRequest) async throws -> Response<Operations.GetRoomIdUserUserIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetRoomIdUserUserIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetRoomIdUserUserIdResponse
+        )
+    }
+    
+    /// Update properties for a user.
+    /// 
+    /// - Parameter request: A ``Operations/PutRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PutRoomIdUserUserIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func putRoomIdUserUserId(request: Operations.PutRoomIdUserUserIdRequest) async throws -> Response<Operations.PutRoomIdUserUserIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePutRoomIdUserUserIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePutRoomIdUserUserIdResponse
+        )
+    }
+    
+    /// Requires a private (non-CORS) API key to be used.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/GetDataViewsQueryRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getDataViewsQuery(request: Operations.GetDataViewsQueryRequest) async throws -> Response<Operations.GetDataViewsQueryResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetDataViewsQueryRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetDataViewsQueryResponse
+        )
+    }
+    
+    /// Requires a proof of ownership to be sent in the request, which for now is just the assetId or streamId parameters (1 of those must be in the query-string).
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/GetDataViewsQueryCreatorRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryCreatorResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getDataViewsQueryCreator(request: Operations.GetDataViewsQueryCreatorRequest) async throws -> Response<Operations.GetDataViewsQueryCreatorResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetDataViewsQueryCreatorRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetDataViewsQueryCreatorResponse
+        )
+    }
+    
+    /// Allows querying for the public metrics for viewership about a video.
+    /// This can be called from the frontend with a CORS key, or even
+    /// unauthenticated.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/GetDataViewsQueryTotalPlaybackIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryTotalPlaybackIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getDataViewsQueryTotalPlaybackId(request: Operations.GetDataViewsQueryTotalPlaybackIdRequest) async throws -> Response<Operations.GetDataViewsQueryTotalPlaybackIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetDataViewsQueryTotalPlaybackIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetDataViewsQueryTotalPlaybackIdResponse
+        )
+    }
+    
+    /// Query usage metrics
+    /// 
+    /// - Parameter request: A ``Operations/GetDataUsageQueryRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataUsageQueryResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getDataUsageQuery(request: Operations.GetDataUsageQueryRequest) async throws -> Response<Operations.GetDataUsageQueryResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetDataUsageQueryRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetDataUsageQueryResponse
+        )
+    }
+    
+    /// Retrieve sessions
+    /// 
+    /// - Returns: A ``Operations/GetSessionResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getSession() async throws -> Response<Operations.GetSessionResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetSessionRequest(with: configuration)
+            },
+            handleResponse: handleGetSessionResponse
+        )
+    }
+    
+    /// Retrieve a session
+    /// 
+    /// - Parameter request: A ``Operations/GetSessionIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetSessionIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getSessionId(request: Operations.GetSessionIdRequest) async throws -> Response<Operations.GetSessionIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetSessionIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetSessionIdResponse
+        )
+    }
+    
+    /// Retrieve Recorded Sessions
+    /// 
+    /// - Parameter request: A ``Operations/GetStreamParentIdSessionsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamParentIdSessionsResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getStreamParentIdSessions(request: Operations.GetStreamParentIdSessionsRequest) async throws -> Response<Operations.GetStreamParentIdSessionsResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetStreamParentIdSessionsRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetStreamParentIdSessionsResponse
+        )
+    }
+    
+    /// Retrieves signing keys
+    /// 
+    /// - Returns: A ``Operations/GetAccessControlSigningKeyResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getAccessControlSigningKey() async throws -> Response<Operations.GetAccessControlSigningKeyResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetAccessControlSigningKeyRequest(with: configuration)
+            },
+            handleResponse: handleGetAccessControlSigningKeyResponse
+        )
+    }
+    
+    /// 
+    /// The publicKey is a representation of the public key, encoded as base 64 and is passed as a string, and  the privateKey is displayed only on creation. This is the only moment where the client can save the private key, otherwise it will be lost. Remember to decode your string when signing JWTs.
+    /// Up to 10 signing keys can be generated, after that you must delete at least one signing key to create a new one.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostAccessControlSigningKeyResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postAccessControlSigningKey() async throws -> Response<Operations.PostAccessControlSigningKeyResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostAccessControlSigningKeyRequest(with: configuration)
+            },
+            handleResponse: handlePostAccessControlSigningKeyResponse
+        )
+    }
+    
+    /// Delete Signing Key
+    /// 
+    /// - Parameter request: A ``Operations/DeleteAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func deleteAccessControlSigningKeyKeyId(request: Operations.DeleteAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.DeleteAccessControlSigningKeyKeyIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureDeleteAccessControlSigningKeyKeyIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleDeleteAccessControlSigningKeyKeyIdResponse
+        )
+    }
+    
+    /// Retrieves a signing key
+    /// 
+    /// - Parameter request: A ``Operations/GetAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getAccessControlSigningKeyKeyId(request: Operations.GetAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.GetAccessControlSigningKeyKeyIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetAccessControlSigningKeyKeyIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetAccessControlSigningKeyKeyIdResponse
+        )
+    }
+    
+    /// Update a signing key
+    /// 
+    /// - Parameter request: A ``Operations/PatchAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func patchAccessControlSigningKeyKeyId(request: Operations.PatchAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.PatchAccessControlSigningKeyKeyIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePatchAccessControlSigningKeyKeyIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePatchAccessControlSigningKeyKeyIdResponse
+        )
+    }
+    
+    /// Retrieve Tasks
+    /// 
+    /// - Returns: A ``Operations/GetTaskResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getTask() async throws -> Response<Operations.GetTaskResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetTaskRequest(with: configuration)
+            },
+            handleResponse: handleGetTaskResponse
+        )
+    }
+    
+    /// Retrieve a Task
+    /// 
+    /// - Parameter request: A ``Operations/GetTaskTaskIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetTaskTaskIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getTaskTaskId(request: Operations.GetTaskTaskIdRequest) async throws -> Response<Operations.GetTaskTaskIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetTaskTaskIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetTaskTaskIdResponse
+        )
+    }
+    
+    /// `POST /transcode` transcodes a video file and uploads the results to the
+    /// specified storage service. 
+    /// \
+    /// \
+    /// Transcoding is asynchronous so you will need to check the status of the
+    /// task in order to determine when transcoding is complete. The `id` field
+    /// in the response is the unique ID for the transcoding `Task`. The task
+    /// status can be queried using the [GET tasks
+    /// endpoint](https://docs.livepeer.org/reference/api/get-tasks):
+    /// \
+    /// \
+    /// When `status.phase` is `completed`,  transcoding will be complete and
+    /// the results will be stored in the storage service and the specified
+    /// output location.
+    /// \
+    /// \
+    /// The results will be available under `params.outputs.hls.path` and
+    /// `params.outputs.mp4.path` in the specified storage service.
+    /// ## Input
+    /// \
+    /// This endpoint currently supports the following inputs:
+    /// - HTTP
+    /// - S3 API Compatible Service
+    /// \
+    /// \
+    /// **HTTP**
+    /// \
+    /// A public HTTP URL can be used to read a video file.
+    /// ```json
+    /// {
+    ///     "url": "https://www.example.com/video.mp4"
+    /// }
+    /// ```
+    /// | Name | Type   | Description                          |
+    /// | ---- | ------ | ------------------------------------ |
+    /// | url  | string | A public HTTP URL for the video file. |
+    /// 
+    /// Note: For IPFS HTTP gateway URLs, the API currently only supports “path
+    /// style” URLs and does not support “subdomain style” URLs. The API will
+    /// support both styles of URLs in a future update.
+    /// \
+    /// \
+    /// **S3 API Compatible Service**
+    /// \
+    /// \
+    /// S3 credentials can be used to authenticate with a S3 API compatible
+    /// service to read a video file.
+    /// 
+    /// ```json
+    /// {
+    ///     "type": "s3",
+    ///     "endpoint": "https://gateway.storjshare.io",
+    ///     "credentials": {
+    ///         "accessKeyId": "$ACCESS_KEY_ID",
+    ///         "secretAccessKey": "$SECRET_ACCESS_KEY"
+    ///     },
+    ///     "bucket": "inbucket",
+    ///     "path": "/video/source.mp4"
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// ## Storage
+    /// \
+    /// This endpoint currently supports the following storage services:
+    /// - S3 API Compatible Service
+    /// - Web3 Storage
+    /// \
+    /// \
+    /// **S3 API Compatible Service**
+    /// ```json
+    /// {
+    ///   "type": "s3",
+    ///     "endpoint": "https://gateway.storjshare.io",
+    ///     "credentials": {
+    ///         "accessKeyId": "$ACCESS_KEY_ID",
+    ///         "secretAccessKey": "$SECRET_ACCESS_KEY"
+    ///     },
+    ///     "bucket": "mybucket"
+    /// }
+    /// ```
+    /// 
+    /// **Web3 Storage**
+    /// 
+    /// ```json
+    /// {
+    ///   "type": "web3.storage",
+    ///     "credentials": {
+    ///         "proof": "$UCAN_DELEGATION_PROOF",
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// 
+    /// ## Outputs
+    /// \
+    /// This endpoint currently supports the following output types:
+    /// - HLS
+    /// - MP4
+    /// 
+    /// **HLS**
+    /// 
+    /// ```json
+    /// {
+    ///   "hls": {
+    ///         "path": "/samplevideo/hls"
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// **MP4**
+    /// 
+    /// ```json
+    /// {
+    ///   "mp4": {
+    ///         "path": "/samplevideo/mp4"
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// - Parameter request: A ``Shared/TranscodePayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostTranscodeResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func postTranscode(request: Shared.TranscodePayload) async throws -> Response<Operations.PostTranscodeResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configurePostTranscodeRequest(with: configuration, request: request)
+            },
+            handleResponse: handlePostTranscodeResponse
+        )
+    }
+    
+    /// Retrieve Playback Info
+    /// 
+    /// - Parameter request: A ``Operations/GetPlaybackIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetPlaybackIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    public func getPlaybackId(request: Operations.GetPlaybackIdRequest) async throws -> Response<Operations.GetPlaybackIdResponse> {
+        return try await makeRequest(
+            configureRequest: { configuration in
+                try configureGetPlaybackIdRequest(with: configuration, request: request)
+            },
+            handleResponse: handleGetPlaybackIdResponse
+        )
     }
 
-    public var multistreamTarget: MultistreamTargetAPI {
-        return _MultistreamTargetAPI(client: self)
-    }
-
-    public var webhook: WebhookAPI {
-        return _WebhookAPI(client: self)
-    }
-
-    public var asset: AssetAPI {
-        return _AssetAPI(client: self)
-    }
-
-    public var room: RoomAPI {
-        return _RoomAPI(client: self)
-    }
-
-    public var metrics: MetricsAPI {
-        return _MetricsAPI(client: self)
-    }
-
-    public var session: SessionAPI {
-        return _SessionAPI(client: self)
-    }
-
-    public var accessControl: AccessControlAPI {
-        return _AccessControlAPI(client: self)
-    }
-
-    public var task: TaskAPI {
-        return _TaskAPI(client: self)
-    }
-
-    public var transcode: TranscodeAPI {
-        return _TranscodeAPI(client: self)
-    }
-
-    public var playback: PlaybackAPI {
-        return _PlaybackAPI(client: self)
-    }
 }
 
 // MARK: - Request Configuration
 
+private func configureGetStreamRequest(with configuration: URLRequestConfiguration, request: Operations.GetStreamRequest) throws {
+    configuration.path = "/stream"
+    configuration.method = .get
+    configuration.queryParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostStreamRequest(with configuration: URLRequestConfiguration, request: Shared.NewStreamPayload) throws {
+    configuration.path = "/stream"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteStreamIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteStreamIdRequest) throws {
+    configuration.path = "/stream/{id}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetStreamIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetStreamIdRequest) throws {
+    configuration.path = "/stream/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePatchStreamIdRequest(with configuration: URLRequestConfiguration, request: Operations.PatchStreamIdRequest) throws {
+    configuration.path = "/stream/{id}"
+    configuration.method = .patch
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.streamPatchPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteStreamIdTerminateRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteStreamIdTerminateRequest) throws {
+    configuration.path = "/stream/{id}/terminate"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetMultistreamTargetRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/multistream/target"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostMultistreamTargetRequest(with configuration: URLRequestConfiguration, request: Shared.MultistreamTargetInput) throws {
+    configuration.path = "/multistream/target"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteMultistreamTargetIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteMultistreamTargetIdRequest) throws {
+    configuration.path = "/multistream/target/{id}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetMultistreamTargetIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetMultistreamTargetIdRequest) throws {
+    configuration.path = "/multistream/target/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePatchMultistreamTargetIdRequest(with configuration: URLRequestConfiguration, request: Operations.PatchMultistreamTargetIdRequest) throws {
+    configuration.path = "/multistream/target/{id}"
+    configuration.method = .patch
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.multistreamTargetPatchPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetWebhookRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/webhook"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostWebhookRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/webhook"
+    configuration.method = .post
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteWebhookIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteWebhookIdRequest) throws {
+    configuration.path = "/webhook/{id}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetWebhookIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetWebhookIdRequest) throws {
+    configuration.path = "/webhook/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePutWebhookIdRequest(with configuration: URLRequestConfiguration, request: Operations.PutWebhookIdRequest) throws {
+    configuration.path = "/webhook/{id}"
+    configuration.method = .put
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetAssetRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/asset"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostAssetRequestUploadRequest(with configuration: URLRequestConfiguration, request: Shared.NewAssetPayload) throws {
+    configuration.path = "/asset/request-upload"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostAssetUploadUrlRequest(with configuration: URLRequestConfiguration, request: Shared.NewAssetPayload) throws {
+    configuration.path = "/asset/upload/url"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteAssetAssetIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteAssetAssetIdRequest) throws {
+    configuration.path = "/asset/{assetId}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetAssetAssetIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetAssetAssetIdRequest) throws {
+    configuration.path = "/asset/{assetId}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePatchAssetAssetIdRequest(with configuration: URLRequestConfiguration, request: Operations.PatchAssetAssetIdRequest) throws {
+    configuration.path = "/asset/{assetId}"
+    configuration.method = .patch
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.assetPatchPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostClipRequest(with configuration: URLRequestConfiguration, request: Shared.ClipPayload) throws {
+    configuration.path = "/clip"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetStreamIdClipsRequest(with configuration: URLRequestConfiguration, request: Operations.GetStreamIdClipsRequest) throws {
+    configuration.path = "/stream/{id}/clips"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostStreamIdCreateMultistreamTargetRequest(with configuration: URLRequestConfiguration, request: Operations.PostStreamIdCreateMultistreamTargetRequest) throws {
+    configuration.path = "/stream/{id}/create-multistream-target"
+    configuration.method = .post
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.targetAddPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteStreamIdMultistreamTargetIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteStreamIdMultistreamTargetIdRequest) throws {
+    configuration.path = "/stream/{id}/multistream/{targetId}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetSessionIdClipsRequest(with configuration: URLRequestConfiguration, request: Operations.GetSessionIdClipsRequest) throws {
+    configuration.path = "/session/{id}/clips"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostRoomRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/room"
+    configuration.method = .post
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteRoomIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteRoomIdRequest) throws {
+    configuration.path = "/room/{id}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetRoomIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetRoomIdRequest) throws {
+    configuration.path = "/room/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteRoomIdEgressRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteRoomIdEgressRequest) throws {
+    configuration.path = "/room/{id}/egress"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostRoomIdEgressRequest(with configuration: URLRequestConfiguration, request: Operations.PostRoomIdEgressRequest) throws {
+    configuration.path = "/room/{id}/egress"
+    configuration.method = .post
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.roomEgressPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostRoomIdUserRequest(with configuration: URLRequestConfiguration, request: Operations.PostRoomIdUserRequest) throws {
+    configuration.path = "/room/{id}/user"
+    configuration.method = .post
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.roomUserPayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteRoomIdUserUserIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteRoomIdUserUserIdRequest) throws {
+    configuration.path = "/room/{id}/user/{userId}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetRoomIdUserUserIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetRoomIdUserUserIdRequest) throws {
+    configuration.path = "/room/{id}/user/{userId}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePutRoomIdUserUserIdRequest(with configuration: URLRequestConfiguration, request: Operations.PutRoomIdUserUserIdRequest) throws {
+    configuration.path = "/room/{id}/user/{userId}"
+    configuration.method = .put
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.roomUserUpdatePayload)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetDataViewsQueryRequest(with configuration: URLRequestConfiguration, request: Operations.GetDataViewsQueryRequest) throws {
+    configuration.path = "/data/views/query"
+    configuration.method = .get
+    configuration.queryParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetDataViewsQueryCreatorRequest(with configuration: URLRequestConfiguration, request: Operations.GetDataViewsQueryCreatorRequest) throws {
+    configuration.path = "/data/views/query/creator"
+    configuration.method = .get
+    configuration.queryParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetDataViewsQueryTotalPlaybackIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetDataViewsQueryTotalPlaybackIdRequest) throws {
+    configuration.path = "/data/views/query/total/{playbackId}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetDataUsageQueryRequest(with configuration: URLRequestConfiguration, request: Operations.GetDataUsageQueryRequest) throws {
+    configuration.path = "/data/usage/query"
+    configuration.method = .get
+    configuration.queryParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetSessionRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/session"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetSessionIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetSessionIdRequest) throws {
+    configuration.path = "/session/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetStreamParentIdSessionsRequest(with configuration: URLRequestConfiguration, request: Operations.GetStreamParentIdSessionsRequest) throws {
+    configuration.path = "/stream/{parentId}/sessions"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.queryParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetAccessControlSigningKeyRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/access-control/signing-key"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostAccessControlSigningKeyRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/access-control/signing-key"
+    configuration.method = .post
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureDeleteAccessControlSigningKeyKeyIdRequest(with configuration: URLRequestConfiguration, request: Operations.DeleteAccessControlSigningKeyKeyIdRequest) throws {
+    configuration.path = "/access-control/signing-key/{keyId}"
+    configuration.method = .delete
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetAccessControlSigningKeyKeyIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetAccessControlSigningKeyKeyIdRequest) throws {
+    configuration.path = "/access-control/signing-key/{keyId}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePatchAccessControlSigningKeyKeyIdRequest(with configuration: URLRequestConfiguration, request: Operations.PatchAccessControlSigningKeyKeyIdRequest) throws {
+    configuration.path = "/access-control/signing-key/{keyId}"
+    configuration.method = .patch
+    configuration.pathParameterSerializable = request
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request.requestBody)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetTaskRequest(with configuration: URLRequestConfiguration) throws {
+    configuration.path = "/task"
+    configuration.method = .get
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetTaskTaskIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetTaskTaskIdRequest) throws {
+    configuration.path = "/task/{taskId}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configurePostTranscodeRequest(with configuration: URLRequestConfiguration, request: Shared.TranscodePayload) throws {
+    configuration.path = "/transcode"
+    configuration.method = .post
+    configuration.contentType = "application/json"
+    configuration.body = try jsonEncoder().encode(request)
+    if configuration.body == nil {
+        throw SerializationError.missingRequiredRequestBody
+    }
+    configuration.telemetryHeader = .userAgent
+}
+
+private func configureGetPlaybackIdRequest(with configuration: URLRequestConfiguration, request: Operations.GetPlaybackIdRequest) throws {
+    configuration.path = "/playback/{id}"
+    configuration.method = .get
+    configuration.pathParameterSerializable = request
+    configuration.telemetryHeader = .userAgent
+}
+
 // MARK: - Response Handlers
+
+private func handleGetStreamResponse(response: Client.APIResponse) throws -> Operations.GetStreamResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Stream].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostStreamResponse(response: Client.APIResponse) throws -> Operations.PostStreamResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Stream].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteStreamIdResponse(response: Client.APIResponse) throws -> Operations.DeleteStreamIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetStreamIdResponse(response: Client.APIResponse) throws -> Operations.GetStreamIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .stream(try JSONDecoder().decode(Shared.Stream.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePatchStreamIdResponse(response: Client.APIResponse) throws -> Operations.PatchStreamIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleDeleteStreamIdTerminateResponse(response: Client.APIResponse) throws -> Operations.DeleteStreamIdTerminateResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetMultistreamTargetResponse(response: Client.APIResponse) throws -> Operations.GetMultistreamTargetResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.MultistreamTarget].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostMultistreamTargetResponse(response: Client.APIResponse) throws -> Operations.PostMultistreamTargetResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 201 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.MultistreamTarget].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteMultistreamTargetIdResponse(response: Client.APIResponse) throws -> Operations.DeleteMultistreamTargetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetMultistreamTargetIdResponse(response: Client.APIResponse) throws -> Operations.GetMultistreamTargetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .multistreamTarget(try JSONDecoder().decode(Shared.MultistreamTarget.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePatchMultistreamTargetIdResponse(response: Client.APIResponse) throws -> Operations.PatchMultistreamTargetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetWebhookResponse(response: Client.APIResponse) throws -> Operations.GetWebhookResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Webhook].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostWebhookResponse(response: Client.APIResponse) throws -> Operations.PostWebhookResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .webhook(try JSONDecoder().decode(Shared.Webhook.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteWebhookIdResponse(response: Client.APIResponse) throws -> Operations.DeleteWebhookIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .webhook(try JSONDecoder().decode(Shared.Webhook.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetWebhookIdResponse(response: Client.APIResponse) throws -> Operations.GetWebhookIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .webhook(try JSONDecoder().decode(Shared.Webhook.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePutWebhookIdResponse(response: Client.APIResponse) throws -> Operations.PutWebhookIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .webhook(try JSONDecoder().decode(Shared.Webhook.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetAssetResponse(response: Client.APIResponse) throws -> Operations.GetAssetResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Asset].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostAssetRequestUploadResponse(response: Client.APIResponse) throws -> Operations.PostAssetRequestUploadResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .object(try JSONDecoder().decode(Operations.PostAssetRequestUploadResponseBody.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostAssetUploadUrlResponse(response: Client.APIResponse) throws -> Operations.PostAssetUploadUrlResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .object(try JSONDecoder().decode(Operations.PostAssetUploadUrlResponseBody.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteAssetAssetIdResponse(response: Client.APIResponse) throws -> Operations.DeleteAssetAssetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetAssetAssetIdResponse(response: Client.APIResponse) throws -> Operations.GetAssetAssetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .asset(try JSONDecoder().decode(Shared.Asset.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePatchAssetAssetIdResponse(response: Client.APIResponse) throws -> Operations.PatchAssetAssetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .asset(try JSONDecoder().decode(Shared.Asset.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostClipResponse(response: Client.APIResponse) throws -> Operations.PostClipResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .object(try JSONDecoder().decode(Operations.PostClipResponseBody.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetStreamIdClipsResponse(response: Client.APIResponse) throws -> Operations.GetStreamIdClipsResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Asset].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostStreamIdCreateMultistreamTargetResponse(response: Client.APIResponse) throws -> Operations.PostStreamIdCreateMultistreamTargetResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleDeleteStreamIdMultistreamTargetIdResponse(response: Client.APIResponse) throws -> Operations.DeleteStreamIdMultistreamTargetIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetSessionIdClipsResponse(response: Client.APIResponse) throws -> Operations.GetSessionIdClipsResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Asset].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostRoomResponse(response: Client.APIResponse) throws -> Operations.PostRoomResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .createRoomResponse(try JSONDecoder().decode(Shared.CreateRoomResponse.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteRoomIdResponse(response: Client.APIResponse) throws -> Operations.DeleteRoomIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetRoomIdResponse(response: Client.APIResponse) throws -> Operations.GetRoomIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .room(try JSONDecoder().decode(Shared.Room.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteRoomIdEgressResponse(response: Client.APIResponse) throws -> Operations.DeleteRoomIdEgressResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handlePostRoomIdEgressResponse(response: Client.APIResponse) throws -> Operations.PostRoomIdEgressResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handlePostRoomIdUserResponse(response: Client.APIResponse) throws -> Operations.PostRoomIdUserResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 201 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .roomUserResponse(try JSONDecoder().decode(Shared.RoomUserResponse.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteRoomIdUserUserIdResponse(response: Client.APIResponse) throws -> Operations.DeleteRoomIdUserUserIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetRoomIdUserUserIdResponse(response: Client.APIResponse) throws -> Operations.GetRoomIdUserUserIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .getRoomUserResponse(try JSONDecoder().decode(Shared.GetRoomUserResponse.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePutRoomIdUserUserIdResponse(response: Client.APIResponse) throws -> Operations.PutRoomIdUserUserIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetDataViewsQueryResponse(response: Client.APIResponse) throws -> Operations.GetDataViewsQueryResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.ViewershipMetric].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetDataViewsQueryCreatorResponse(response: Client.APIResponse) throws -> Operations.GetDataViewsQueryCreatorResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.ViewershipMetric].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetDataViewsQueryTotalPlaybackIdResponse(response: Client.APIResponse) throws -> Operations.GetDataViewsQueryTotalPlaybackIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .object(try JSONDecoder().decode(Operations.GetDataViewsQueryTotalPlaybackIdResponseBody.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetDataUsageQueryResponse(response: Client.APIResponse) throws -> Operations.GetDataUsageQueryResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .usageMetric(try JSONDecoder().decode(Shared.UsageMetric.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetSessionResponse(response: Client.APIResponse) throws -> Operations.GetSessionResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Session].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetSessionIdResponse(response: Client.APIResponse) throws -> Operations.GetSessionIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .session(try JSONDecoder().decode(Shared.Session.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetStreamParentIdSessionsResponse(response: Client.APIResponse) throws -> Operations.GetStreamParentIdSessionsResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Session].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetAccessControlSigningKeyResponse(response: Client.APIResponse) throws -> Operations.GetAccessControlSigningKeyResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.SigningKey].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostAccessControlSigningKeyResponse(response: Client.APIResponse) throws -> Operations.PostAccessControlSigningKeyResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .signingKey(try JSONDecoder().decode(Shared.SigningKey.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleDeleteAccessControlSigningKeyKeyIdResponse(response: Client.APIResponse) throws -> Operations.DeleteAccessControlSigningKeyKeyIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetAccessControlSigningKeyKeyIdResponse(response: Client.APIResponse) throws -> Operations.GetAccessControlSigningKeyKeyIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .signingKey(try JSONDecoder().decode(Shared.SigningKey.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePatchAccessControlSigningKeyKeyIdResponse(response: Client.APIResponse) throws -> Operations.PatchAccessControlSigningKeyKeyIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 204 { 
+        return .empty
+    }
+
+    return .empty
+}
+
+private func handleGetTaskResponse(response: Client.APIResponse) throws -> Operations.GetTaskResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .classes(try JSONDecoder().decode([Shared.Task].self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetTaskTaskIdResponse(response: Client.APIResponse) throws -> Operations.GetTaskTaskIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .task(try JSONDecoder().decode(Shared.Task.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handlePostTranscodeResponse(response: Client.APIResponse) throws -> Operations.PostTranscodeResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .task(try JSONDecoder().decode(Shared.Task.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
+
+private func handleGetPlaybackIdResponse(response: Client.APIResponse) throws -> Operations.GetPlaybackIdResponse {
+    let httpResponse = response.httpResponse
+    
+    if httpResponse.statusCode == 200 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .playbackInfo(try JSONDecoder().decode(Shared.PlaybackInfo.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    } else if httpResponse.statusCode == 404 { 
+        if httpResponse.contentType.matchContentType(pattern: "application/json"), let data = response.data {
+            do {
+                return .error(try JSONDecoder().decode(Shared.Error.self, from: data))
+            } catch {
+                throw ResponseHandlerError.failedToDecodeJSON(error)
+            }
+        }
+    }
+
+    return .empty
+}
 

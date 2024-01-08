@@ -3,9 +3,12 @@
 import Foundation
 
 extension Shared {
+    /// Human Readable Name
     public enum Hrn: String, Codable, APIValue {
         case hlsTs = "HLS (TS)"
         case mp4 = "MP4"
         case webRtcH264 = "WebRTC (H264)"
+        case thumbnailJpeg = "Thumbnail (JPEG)"
+        case thumbnails = "Thumbnails"
     }
 }

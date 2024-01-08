@@ -6,7 +6,7 @@ extension Shared {
     /// A model object
     public struct Session {
         public let name: String
-        /// Timestamp (in milliseconds) at which the stream object was created
+        /// Timestamp (in milliseconds) at which stream object was created
         @DecimalSerialized
         public private(set) var createdAt: Double?
         public let id: String?
@@ -26,9 +26,9 @@ extension Shared {
         /// Rate at which transcodedBytes increases (bytes/second)
         @DecimalSerialized
         public private(set) var outgoingRate: Double?
-        /// Points to the parent stream object
+        /// Points to parent stream object
         public let parentId: String?
-        /// Used to form the playback URL
+        /// Used to form playback URL
         public let playbackId: String?
         public let profiles: [Shared.FfmpegProfile]?
         /// Should this stream be recorded? Uses default settings. For more
@@ -56,7 +56,7 @@ extension Shared {
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter createdAt: Timestamp (in milliseconds) at which the stream object was created
+        /// - Parameter createdAt: Timestamp (in milliseconds) at which stream object was created
         /// - Parameter ingestRate: Rate at which sourceBytes increases (bytes/second)
         /// - Parameter isHealthy: Indicates whether the stream is healthy or not.
         /// - Parameter issues: A string array of human-readable errors describing issues affecting
@@ -64,8 +64,8 @@ extension Shared {
         /// 
         /// - Parameter mp4Url: URL for the stream session recording packaged in an mp4.
         /// - Parameter outgoingRate: Rate at which transcodedBytes increases (bytes/second)
-        /// - Parameter parentId: Points to the parent stream object
-        /// - Parameter playbackId: Used to form the playback URL
+        /// - Parameter parentId: Points to parent stream object
+        /// - Parameter playbackId: Used to form playback URL
         /// - Parameter record: Should this stream be recorded? Uses default settings. For more
         /// customization, create and configure an object store.
         /// 

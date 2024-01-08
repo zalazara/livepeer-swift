@@ -5,15 +5,15 @@ import Foundation
 extension Shared {
     /// A model object
     public enum Pinata {
-        case ipfsExportParamsSchemas1(Shared.IpfsExportParamsSchemas1)
+        case ipfsExportParams1(Shared.IpfsExportParams1)
         case ipfsExportParams2(Shared.IpfsExportParams2)
     }
 }
 
 extension Shared.Pinata: Codable {
     public init(from decoder: Decoder) throws {
-        if let value = try? Shared.IpfsExportParamsSchemas1(from: decoder) {
-            self = .ipfsExportParamsSchemas1(value)
+        if let value = try? Shared.IpfsExportParams1(from: decoder) {
+            self = .ipfsExportParams1(value)
         } else if let value = try? Shared.IpfsExportParams2(from: decoder) {
             self = .ipfsExportParams2(value)
         } else {
@@ -23,7 +23,7 @@ extension Shared.Pinata: Codable {
 
     public func encode(to encoder: Encoder) throws {
         switch self {
-        case .ipfsExportParamsSchemas1(let value):
+        case .ipfsExportParams1(let value):
             try value.encode(to: encoder)
         case .ipfsExportParams2(let value):
             try value.encode(to: encoder)

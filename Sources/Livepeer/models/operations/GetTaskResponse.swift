@@ -6,7 +6,7 @@ extension Operations {
     /// A response model
     public enum GetTaskResponse {
         case empty
-        case task(Shared.Task)
+        case classes([Shared.Task])
 
         var isEmpty: Bool {
             if case .empty = self {
@@ -16,8 +16,8 @@ extension Operations {
             }
         }
 
-        public func task() throws -> Shared.Task {
-            guard case .task(let value) = self else {
+        public func classes() throws -> [Shared.Task] {
+            guard case .classes(let value) = self else {
                 throw LivepeerError.missingResponseData
             }
             return value

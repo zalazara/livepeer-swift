@@ -5,22 +5,15 @@ import Foundation
 extension Shared {
     /// A model object
     public struct Encryption {
-        /// Encryption key used to encrypt the asset. Only writable in the upload asset endpoints and cannot be retrieved back.
-        public let encryptedKey: String
 
-        /// Creates an object with the specified parameters
+        /// Creates an object
         ///
-        /// - Parameter encryptedKey: Encryption key used to encrypt the asset. Only writable in the upload asset endpoints and cannot be retrieved back.
         ///
-        public init(encryptedKey: String) {
-            self.encryptedKey = encryptedKey
+        public init() {
         }
     }
 }
 
 extension Shared.Encryption: Codable {
-    enum CodingKeys: String, CodingKey {
-        case encryptedKey
-    }
 }
 

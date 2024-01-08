@@ -12,499 +12,596 @@ import Foundation
 ///
 /// These methods allow you to make requests to the API.
 ///
-///
-/// ### Scoped API calls
-///
-/// These properties logically group other parts of the API.
-///
-/// - ``stream``
-/// - ``multistreamTarget``
-/// - ``webhook``
-/// - ``asset``
-/// - ``room``
-/// - ``metrics``
-/// - ``session``
-/// - ``accessControl``
-/// - ``task``
-/// - ``transcode``
-/// - ``playback``
+/// - ``getStream(request:)``
+/// - ``postStream(request:)``
+/// - ``deleteStreamId(request:)``
+/// - ``getStreamId(request:)``
+/// - ``patchStreamId(request:)``
+/// - ``deleteStreamIdTerminate(request:)``
+/// - ``getMultistreamTarget()``
+/// - ``postMultistreamTarget(request:)``
+/// - ``deleteMultistreamTargetId(request:)``
+/// - ``getMultistreamTargetId(request:)``
+/// - ``patchMultistreamTargetId(request:)``
+/// - ``getWebhook()``
+/// - ``postWebhook()``
+/// - ``deleteWebhookId(request:)``
+/// - ``getWebhookId(request:)``
+/// - ``putWebhookId(request:)``
+/// - ``getAsset()``
+/// - ``postAssetRequestUpload(request:)``
+/// - ``postAssetUploadUrl(request:)``
+/// - ``deleteAssetAssetId(request:)``
+/// - ``getAssetAssetId(request:)``
+/// - ``patchAssetAssetId(request:)``
+/// - ``postClip(request:)``
+/// - ``getStreamIdClips(request:)``
+/// - ``postStreamIdCreateMultistreamTarget(request:)``
+/// - ``deleteStreamIdMultistreamTargetId(request:)``
+/// - ``getSessionIdClips(request:)``
+/// - ``postRoom()``
+/// - ``deleteRoomId(request:)``
+/// - ``getRoomId(request:)``
+/// - ``deleteRoomIdEgress(request:)``
+/// - ``postRoomIdEgress(request:)``
+/// - ``postRoomIdUser(request:)``
+/// - ``deleteRoomIdUserUserId(request:)``
+/// - ``getRoomIdUserUserId(request:)``
+/// - ``putRoomIdUserUserId(request:)``
+/// - ``getDataViewsQuery(request:)``
+/// - ``getDataViewsQueryCreator(request:)``
+/// - ``getDataViewsQueryTotalPlaybackId(request:)``
+/// - ``getDataUsageQuery(request:)``
+/// - ``getSession()``
+/// - ``getSessionId(request:)``
+/// - ``getStreamParentIdSessions(request:)``
+/// - ``getAccessControlSigningKey()``
+/// - ``postAccessControlSigningKey()``
+/// - ``deleteAccessControlSigningKeyKeyId(request:)``
+/// - ``getAccessControlSigningKeyKeyId(request:)``
+/// - ``patchAccessControlSigningKeyKeyId(request:)``
+/// - ``getTask()``
+/// - ``getTaskTaskId(request:)``
+/// - ``postTranscode(request:)``
+/// - ``getPlaybackId(request:)``
 ///
 public protocol LivepeerAPI {
-
-    // MARK: - Scoped APIs
-    var stream: StreamAPI { get }
-    var multistreamTarget: MultistreamTargetAPI { get }
-    var webhook: WebhookAPI { get }
-    var asset: AssetAPI { get }
-    var room: RoomAPI { get }
-    var metrics: MetricsAPI { get }
-    var session: SessionAPI { get }
-    var accessControl: AccessControlAPI { get }
-    var task: TaskAPI { get }
-    var transcode: TranscodeAPI { get }
-    var playback: PlaybackAPI { get }
-}
-
-// MARK: - StreamAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getAll(request:)``
-/// - ``create(request:)``
-/// - ``delete(request:)``
-/// - ``get(request:)``
-/// - ``update(request:)``
-/// - ``createClip(request:)``
-/// - ``getAllClips(request:)``
-///
-public protocol StreamAPI {
     /// Retrieve streams
     /// 
-    /// - Parameter request: A ``Operations/GetAllRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetAllResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetStreamRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getAll(request: Operations.GetAllRequest) async throws -> Response<Operations.GetAllResponse>
-
-    /// Create a stream
+    func getStream(request: Operations.GetStreamRequest) async throws -> Response<Operations.GetStreamResponse>
+    /// The only parameter you are required to set is the name of your stream,
+    /// but we also highly recommend that you define transcoding profiles
+    /// parameter that suits your specific broadcasting configuration.
+    /// \
+    /// \
+    /// If you do not define transcoding rendition profiles when creating the
+    /// stream, a default set of profiles will be used. These profiles include
+    /// 240p,  360p, 480p and 720p.
+    /// \
+    /// \
+    /// The playback policy is set to public by default for new streams. It can
+    /// also be added upon the creation of a new stream by adding
+    /// `"playbackPolicy": {"type": "jwt"}`
+    /// 
     /// 
     /// - Parameter request: A ``Shared/NewStreamPayload`` object describing the input to the API operation
-    /// - Returns: A ``Operations/CreateResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/PostStreamResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func create(request: Shared.NewStreamPayload) async throws -> Response<Operations.CreateResponse>
-
-    /// Delete a stream
+    func postStream(request: Shared.NewStreamPayload) async throws -> Response<Operations.PostStreamResponse>
     /// 
-    /// - Parameter request: A ``Operations/DeleteRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteResponse`` object describing the result of the API operation
+    /// This will also suspend any active stream sessions, so make sure to wait
+    /// until the stream has finished. To explicitly interrupt an active
+    /// session, consider instead updating the suspended field in the stream
+    /// using the PATCH stream API.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/DeleteStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func delete(request: Operations.DeleteRequest) async throws -> Response<Operations.DeleteResponse>
-
+    func deleteStreamId(request: Operations.DeleteStreamIdRequest) async throws -> Response<Operations.DeleteStreamIdResponse>
     /// Retrieve a stream
     /// 
-    /// - Parameter request: A ``Operations/GetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func get(request: Operations.GetRequest) async throws -> Response<Operations.GetResponse>
-
+    func getStreamId(request: Operations.GetStreamIdRequest) async throws -> Response<Operations.GetStreamIdResponse>
     /// Update a stream
     /// 
-    /// - Parameter request: A ``Operations/UpdateRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UpdateResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PatchStreamIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchStreamIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func update(request: Operations.UpdateRequest) async throws -> Response<Operations.UpdateResponse>
-
-    /// Create a clip from a livestream
+    func patchStreamId(request: Operations.PatchStreamIdRequest) async throws -> Response<Operations.PatchStreamIdResponse>
+    /// `DELETE /stream/{id}/terminate` can be used to terminate an ongoing
+    /// session on a live stream. Unlike suspending the stream, it allows the
+    /// streamer to restart streaming even immediately, but it will force
+    /// terminate the current session and stop the recording.
+    /// \
+    /// \
+    /// A 204 No Content status response indicates the stream was successfully
+    /// terminated.
     /// 
     /// 
-    /// - Parameter request: A ``Shared/ClipPayload`` object describing the input to the API operation
-    /// - Returns: A ``Operations/CreateClipResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteStreamIdTerminateRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdTerminateResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func createClip(request: Shared.ClipPayload) async throws -> Response<Operations.CreateClipResponse>
-
-    /// Retrieve clips of a livestream
-    /// 
-    /// - Parameter request: A ``Operations/GetAllClipsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetAllClipsResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func getAllClips(request: Operations.GetAllClipsRequest) async throws -> Response<Operations.GetAllClipsResponse>
-}
-
-// MARK: - MultistreamTargetAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getMultistreamTargets()``
-/// - ``createMultistreamTarget(request:)``
-/// - ``deleteMultistreamTarget(request:)``
-/// - ``getMultistreamTarget(request:)``
-/// - ``updateMultistreamTarget(request:)``
-///
-public protocol MultistreamTargetAPI {
+    func deleteStreamIdTerminate(request: Operations.DeleteStreamIdTerminateRequest) async throws -> Response<Operations.DeleteStreamIdTerminateResponse>
     /// Retrieve Multistream Targets
     /// 
-    /// - Returns: A ``Operations/GetMultistreamTargetsResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/GetMultistreamTargetResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getMultistreamTargets() async throws -> Response<Operations.GetMultistreamTargetsResponse>
-
+    func getMultistreamTarget() async throws -> Response<Operations.GetMultistreamTargetResponse>
     /// Create a multistream target
     /// 
     /// - Parameter request: A ``Shared/MultistreamTargetInput`` object describing the input to the API operation
-    /// - Returns: A ``Operations/CreateMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/PostMultistreamTargetResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func createMultistreamTarget(request: Shared.MultistreamTargetInput) async throws -> Response<Operations.CreateMultistreamTargetResponse>
-
-    /// Delete a multistream target
+    func postMultistreamTarget(request: Shared.MultistreamTargetInput) async throws -> Response<Operations.PostMultistreamTargetResponse>
+    /// Make sure to remove any references to the target on existing
+    /// streams before actually deleting it from the API.
     /// 
-    /// - Parameter request: A ``Operations/DeleteMultistreamTargetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteMultistreamTargetResponse`` object describing the result of the API operation
+    /// 
+    /// - Parameter request: A ``Operations/DeleteMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteMultistreamTargetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func deleteMultistreamTarget(request: Operations.DeleteMultistreamTargetRequest) async throws -> Response<Operations.DeleteMultistreamTargetResponse>
-
+    func deleteMultistreamTargetId(request: Operations.DeleteMultistreamTargetIdRequest) async throws -> Response<Operations.DeleteMultistreamTargetIdResponse>
     /// Retrieve a multistream target
     /// 
-    /// - Parameter request: A ``Operations/GetMultistreamTargetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetMultistreamTargetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getMultistreamTarget(request: Operations.GetMultistreamTargetRequest) async throws -> Response<Operations.GetMultistreamTargetResponse>
-
+    func getMultistreamTargetId(request: Operations.GetMultistreamTargetIdRequest) async throws -> Response<Operations.GetMultistreamTargetIdResponse>
     /// Update Multistream Target
     /// 
-    /// - Parameter request: A ``Operations/UpdateMultistreamTargetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UpdateMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PatchMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchMultistreamTargetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func updateMultistreamTarget(request: Operations.UpdateMultistreamTargetRequest) async throws -> Response<Operations.UpdateMultistreamTargetResponse>
-}
-
-// MARK: - WebhookAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getWebhooks()``
-/// - ``createWebhook()``
-/// - ``deleteWebhook(request:)``
-/// - ``getWebhook(request:)``
-/// - ``updateWebhook(request:)``
-///
-public protocol WebhookAPI {
+    func patchMultistreamTargetId(request: Operations.PatchMultistreamTargetIdRequest) async throws -> Response<Operations.PatchMultistreamTargetIdResponse>
     /// Retrieve a Webhook
     /// 
-    /// - Returns: A ``Operations/GetWebhooksResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func getWebhooks() async throws -> Response<Operations.GetWebhooksResponse>
-
-    /// Create a webhook
-    /// 
-    /// - Returns: A ``Operations/CreateWebhookResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func createWebhook() async throws -> Response<Operations.CreateWebhookResponse>
-
-    /// Delete a webhook
-    /// 
-    /// - Parameter request: A ``Operations/DeleteWebhookRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteWebhookResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func deleteWebhook(request: Operations.DeleteWebhookRequest) async throws -> Response<Operations.DeleteWebhookResponse>
-
-    /// Retrieve a webhook
-    /// 
-    /// - Parameter request: A ``Operations/GetWebhookRequest`` object describing the input to the API operation
     /// - Returns: A ``Operations/GetWebhookResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getWebhook(request: Operations.GetWebhookRequest) async throws -> Response<Operations.GetWebhookResponse>
-
+    func getWebhook() async throws -> Response<Operations.GetWebhookResponse>
+    /// To create a new webhook, you need to make an API call with the events you want to listen for and the URL that will be called when those events occur.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostWebhookResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func postWebhook() async throws -> Response<Operations.PostWebhookResponse>
+    /// Delete a webhook
+    /// 
+    /// - Parameter request: A ``Operations/DeleteWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteWebhookIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func deleteWebhookId(request: Operations.DeleteWebhookIdRequest) async throws -> Response<Operations.DeleteWebhookIdResponse>
+    /// Retrieve a webhook
+    /// 
+    /// - Parameter request: A ``Operations/GetWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetWebhookIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func getWebhookId(request: Operations.GetWebhookIdRequest) async throws -> Response<Operations.GetWebhookIdResponse>
     /// Update a webhook
     /// 
-    /// - Parameter request: A ``Operations/UpdateWebhookRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UpdateWebhookResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PutWebhookIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PutWebhookIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func updateWebhook(request: Operations.UpdateWebhookRequest) async throws -> Response<Operations.UpdateWebhookResponse>
-}
-
-// MARK: - AssetAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getAssets()``
-/// - ``requestUpload(request:)``
-/// - ``uploadAssetViaURL(request:)``
-/// - ``deleteAsset(request:)``
-/// - ``getAsset(request:)``
-/// - ``patchAssetAssetId(request:)``
-///
-public protocol AssetAPI {
+    func putWebhookId(request: Operations.PutWebhookIdRequest) async throws -> Response<Operations.PutWebhookIdResponse>
     /// Retrieve assets
     /// 
-    /// - Returns: A ``Operations/GetAssetsResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/GetAssetResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getAssets() async throws -> Response<Operations.GetAssetsResponse>
-
-    /// Upload an asset
+    func getAsset() async throws -> Response<Operations.GetAssetResponse>
+    /// To upload an asset, your first need to request for a direct upload URL
+    /// and only then actually upload the contents of the asset.
+    /// \
+    /// \
+    /// Once you created a upload link, you have 2 options, resumable or direct
+    /// upload. For a more reliable experience, you should use resumable uploads
+    /// which will work better for users with unreliable or slow network
+    /// connections. If you want a simpler implementation though, you should
+    /// just use a direct upload.
+    /// 
+    /// 
+    /// ## Direct Upload
+    /// For a direct upload, make a PUT request to the URL received in the url
+    /// field of the response above, with the raw video file as the request
+    /// body. response above:
+    /// 
+    /// 
+    /// ## Resumable Upload
+    /// Livepeer supports resumable uploads via Tus. This section provides a
+    /// simple example of how to use tus-js-client to upload a video file.
+    /// \
+    /// \
+    /// From the previous section, we generated a URL to upload a video file to
+    /// Livepeer on POST /api/asset/request-upload. You should use the
+    /// tusEndpoint field of the response to upload the video file and track the
+    /// progress:
+    /// 
+    /// ``` 
+    /// # This assumes there is an `input` element of `type="file"` with id
+    /// `fileInput` in the HTML
+    /// 
+    /// 
+    /// const input = document.getElementById('fileInput');
+    /// 
+    /// const file = input.files[0];
+    /// 
+    /// const upload = new tus.Upload(file, {
+    ///   endpoint: tusEndpoint, // URL from `tusEndpoint` field in the
+    /// `/request-upload` response
+    ///   metadata: {
+    ///     filename,
+    ///     filetype: 'video/mp4',
+    ///   },
+    ///   uploadSize: file.size,
+    ///   onError(err) {
+    ///     console.error('Error uploading file:', err);
+    ///   },
+    ///   onProgress(bytesUploaded, bytesTotal) {
+    ///     const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+    ///     console.log('Uploaded ' + percentage + '%');
+    ///   },
+    ///   onSuccess() {
+    ///     console.log('Upload finished:', upload.url);
+    ///   },
+    /// });
+    /// 
+    /// const previousUploads = await upload.findPreviousUploads();
+    /// 
+    /// if (previousUploads.length > 0) {
+    ///   upload.resumeFromPreviousUpload(previousUploads[0]);
+    /// }
+    /// 
+    /// upload.start();
+    /// 
+    /// ```
+    /// 
+    /// > Note: If you are using tus from node.js, you need to add a custom URL
+    /// storage to enable resuming from previous uploads. On the browser, this
+    /// is enabled by default using local storage. In node.js, add urlStorage:
+    /// new tus.FileUrlStorage("path/to/tmp/file"), to the UploadFile object
+    /// definition above.
+    /// 
     /// 
     /// - Parameter request: A ``Shared/NewAssetPayload`` object describing the input to the API operation
-    /// - Returns: A ``Operations/RequestUploadResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/PostAssetRequestUploadResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func requestUpload(request: Shared.NewAssetPayload) async throws -> Response<Operations.RequestUploadResponse>
-
+    func postAssetRequestUpload(request: Shared.NewAssetPayload) async throws -> Response<Operations.PostAssetRequestUploadResponse>
     /// Upload asset via URL
     /// 
     /// - Parameter request: A ``Shared/NewAssetPayload`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UploadAssetViaURLResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/PostAssetUploadUrlResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func uploadAssetViaURL(request: Shared.NewAssetPayload) async throws -> Response<Operations.UploadAssetViaURLResponse>
-
+    func postAssetUploadUrl(request: Shared.NewAssetPayload) async throws -> Response<Operations.PostAssetUploadUrlResponse>
     /// Delete an asset
     /// 
-    /// - Parameter request: A ``Operations/DeleteAssetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteAssetResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteAssetAssetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteAssetAssetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func deleteAsset(request: Operations.DeleteAssetRequest) async throws -> Response<Operations.DeleteAssetResponse>
-
+    func deleteAssetAssetId(request: Operations.DeleteAssetAssetIdRequest) async throws -> Response<Operations.DeleteAssetAssetIdResponse>
     /// Retrieves an asset
     /// 
-    /// - Parameter request: A ``Operations/GetAssetRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetAssetResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetAssetAssetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetAssetAssetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getAsset(request: Operations.GetAssetRequest) async throws -> Response<Operations.GetAssetResponse>
-
-    /// Update an asset
+    func getAssetAssetId(request: Operations.GetAssetAssetIdRequest) async throws -> Response<Operations.GetAssetAssetIdResponse>
+    /// Patch an asset
     /// 
     /// - Parameter request: A ``Operations/PatchAssetAssetIdRequest`` object describing the input to the API operation
     /// - Returns: A ``Operations/PatchAssetAssetIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
     func patchAssetAssetId(request: Operations.PatchAssetAssetIdRequest) async throws -> Response<Operations.PatchAssetAssetIdResponse>
-}
-
-// MARK: - RoomAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``createRoom()``
-/// - ``deleteRoom(request:)``
-/// - ``getRoom(request:)``
-/// - ``stopRoomEgress(request:)``
-/// - ``startRoomEgress(request:)``
-/// - ``createRoomUser(request:)``
-/// - ``deleteRoomUser(request:)``
-/// - ``getRoomUserDetails(request:)``
-/// - ``updateRoomUserDetails(request:)``
-///
-public protocol RoomAPI {
-    /// Create a room
+    /// Create a clip
     /// 
-    /// - Returns: A ``Operations/CreateRoomResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Shared/ClipPayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostClipResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func createRoom() async throws -> Response<Operations.CreateRoomResponse>
-
+    func postClip(request: Shared.ClipPayload) async throws -> Response<Operations.PostClipResponse>
+    /// Retrieve clips of a livestream
+    /// 
+    /// - Parameter request: A ``Operations/GetStreamIdClipsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamIdClipsResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func getStreamIdClips(request: Operations.GetStreamIdClipsRequest) async throws -> Response<Operations.GetStreamIdClipsResponse>
+    /// Add a multistream target
+    /// 
+    /// - Parameter request: A ``Operations/PostStreamIdCreateMultistreamTargetRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostStreamIdCreateMultistreamTargetResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func postStreamIdCreateMultistreamTarget(request: Operations.PostStreamIdCreateMultistreamTargetRequest) async throws -> Response<Operations.PostStreamIdCreateMultistreamTargetResponse>
+    /// Remove a multistream target
+    /// 
+    /// - Parameter request: A ``Operations/DeleteStreamIdMultistreamTargetIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteStreamIdMultistreamTargetIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func deleteStreamIdMultistreamTargetId(request: Operations.DeleteStreamIdMultistreamTargetIdRequest) async throws -> Response<Operations.DeleteStreamIdMultistreamTargetIdResponse>
+    /// Retrieve clips of a session
+    /// 
+    /// - Parameter request: A ``Operations/GetSessionIdClipsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetSessionIdClipsResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func getSessionIdClips(request: Operations.GetSessionIdClipsRequest) async throws -> Response<Operations.GetSessionIdClipsResponse>
+    /// Create a multiparticipant livestreaming room.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostRoomResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func postRoom() async throws -> Response<Operations.PostRoomResponse>
     /// Delete a room
     /// 
-    /// - Parameter request: A ``Operations/DeleteRoomRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteRoomResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteRoomIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func deleteRoom(request: Operations.DeleteRoomRequest) async throws -> Response<Operations.DeleteRoomResponse>
-
+    func deleteRoomId(request: Operations.DeleteRoomIdRequest) async throws -> Response<Operations.DeleteRoomIdResponse>
     /// Retrieve a room
     /// 
-    /// - Parameter request: A ``Operations/GetRoomRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetRoomResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetRoomIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetRoomIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getRoom(request: Operations.GetRoomRequest) async throws -> Response<Operations.GetRoomResponse>
-
+    func getRoomId(request: Operations.GetRoomIdRequest) async throws -> Response<Operations.GetRoomIdResponse>
     /// Stop room RTMP egress
     /// 
-    /// - Parameter request: A ``Operations/StopRoomEgressRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/StopRoomEgressResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteRoomIdEgressRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdEgressResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func stopRoomEgress(request: Operations.StopRoomEgressRequest) async throws -> Response<Operations.StopRoomEgressResponse>
-
-    /// Start room RTMP egress
+    func deleteRoomIdEgress(request: Operations.DeleteRoomIdEgressRequest) async throws -> Response<Operations.DeleteRoomIdEgressResponse>
+    /// Create a livestream for your room.
+    /// This allows you to leverage livestreaming features like recording and HLS output.
     /// 
-    /// - Parameter request: A ``Operations/StartRoomEgressRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/StartRoomEgressResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func startRoomEgress(request: Operations.StartRoomEgressRequest) async throws -> Response<Operations.StartRoomEgressResponse>
-
-    /// Create a room user
     /// 
-    /// - Parameter request: A ``Operations/CreateRoomUserRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/CreateRoomUserResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PostRoomIdEgressRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostRoomIdEgressResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func createRoomUser(request: Operations.CreateRoomUserRequest) async throws -> Response<Operations.CreateRoomUserResponse>
-
+    func postRoomIdEgress(request: Operations.PostRoomIdEgressRequest) async throws -> Response<Operations.PostRoomIdEgressResponse>
+    /// Call this endpoint to add a user to a room, specifying a display name at a minimum.
+    /// The response will contain a joining URL for Livepeer's default meeting app.
+    /// Alternatively the joining token can be used with a custom app.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/PostRoomIdUserRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostRoomIdUserResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func postRoomIdUser(request: Operations.PostRoomIdUserRequest) async throws -> Response<Operations.PostRoomIdUserResponse>
     /// Remove a user from the room
     /// 
-    /// - Parameter request: A ``Operations/DeleteRoomUserRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteRoomUserResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteRoomIdUserUserIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func deleteRoomUser(request: Operations.DeleteRoomUserRequest) async throws -> Response<Operations.DeleteRoomUserResponse>
-
+    func deleteRoomIdUserUserId(request: Operations.DeleteRoomIdUserUserIdRequest) async throws -> Response<Operations.DeleteRoomIdUserUserIdResponse>
     /// Get user details
     /// 
-    /// - Parameter request: A ``Operations/GetRoomUserDetailsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetRoomUserDetailsResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetRoomIdUserUserIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getRoomUserDetails(request: Operations.GetRoomUserDetailsRequest) async throws -> Response<Operations.GetRoomUserDetailsResponse>
-
-    /// Update a room user
+    func getRoomIdUserUserId(request: Operations.GetRoomIdUserUserIdRequest) async throws -> Response<Operations.GetRoomIdUserUserIdResponse>
+    /// Update properties for a user.
     /// 
-    /// - Parameter request: A ``Operations/UpdateRoomUserDetailsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UpdateRoomUserDetailsResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PutRoomIdUserUserIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PutRoomIdUserUserIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func updateRoomUserDetails(request: Operations.UpdateRoomUserDetailsRequest) async throws -> Response<Operations.UpdateRoomUserDetailsResponse>
-}
-
-// MARK: - MetricsAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getViewershipsMetrics(request:)``
-/// - ``getCreatorMetrics(request:)``
-/// - ``getPublicTotalViewsMetrics(request:)``
-/// - ``getUsageMetrics(request:)``
-///
-public protocol MetricsAPI {
-    /// Query viewership metrics
+    func putRoomIdUserUserId(request: Operations.PutRoomIdUserUserIdRequest) async throws -> Response<Operations.PutRoomIdUserUserIdResponse>
+    /// Requires a private (non-CORS) API key to be used.
     /// 
-    /// - Parameter request: A ``Operations/GetViewershipsMetricsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetViewershipsMetricsResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func getViewershipsMetrics(request: Operations.GetViewershipsMetricsRequest) async throws -> Response<Operations.GetViewershipsMetricsResponse>
-
-    /// Query creator viewership metrics
     /// 
-    /// - Parameter request: A ``Operations/GetCreatorMetricsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetCreatorMetricsResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetDataViewsQueryRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getCreatorMetrics(request: Operations.GetCreatorMetricsRequest) async throws -> Response<Operations.GetCreatorMetricsResponse>
-
-    /// Query public total views metrics
+    func getDataViewsQuery(request: Operations.GetDataViewsQueryRequest) async throws -> Response<Operations.GetDataViewsQueryResponse>
+    /// Requires a proof of ownership to be sent in the request, which for now is just the assetId or streamId parameters (1 of those must be in the query-string).
     /// 
-    /// - Parameter request: A ``Operations/GetPublicTotalViewsMetricsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetPublicTotalViewsMetricsResponse`` object describing the result of the API operation
+    /// 
+    /// - Parameter request: A ``Operations/GetDataViewsQueryCreatorRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryCreatorResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getPublicTotalViewsMetrics(request: Operations.GetPublicTotalViewsMetricsRequest) async throws -> Response<Operations.GetPublicTotalViewsMetricsResponse>
-
+    func getDataViewsQueryCreator(request: Operations.GetDataViewsQueryCreatorRequest) async throws -> Response<Operations.GetDataViewsQueryCreatorResponse>
+    /// Allows querying for the public metrics for viewership about a video.
+    /// This can be called from the frontend with a CORS key, or even
+    /// unauthenticated.
+    /// 
+    /// 
+    /// - Parameter request: A ``Operations/GetDataViewsQueryTotalPlaybackIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataViewsQueryTotalPlaybackIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func getDataViewsQueryTotalPlaybackId(request: Operations.GetDataViewsQueryTotalPlaybackIdRequest) async throws -> Response<Operations.GetDataViewsQueryTotalPlaybackIdResponse>
     /// Query usage metrics
     /// 
-    /// - Parameter request: A ``Operations/GetUsageMetricsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetUsageMetricsResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetDataUsageQueryRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetDataUsageQueryResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getUsageMetrics(request: Operations.GetUsageMetricsRequest) async throws -> Response<Operations.GetUsageMetricsResponse>
-}
-
-// MARK: - SessionAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getSessions()``
-/// - ``getSession(request:)``
-/// - ``getRecordedSessions(request:)``
-///
-public protocol SessionAPI {
+    func getDataUsageQuery(request: Operations.GetDataUsageQueryRequest) async throws -> Response<Operations.GetDataUsageQueryResponse>
     /// Retrieve sessions
     /// 
-    /// - Returns: A ``Operations/GetSessionsResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func getSessions() async throws -> Response<Operations.GetSessionsResponse>
-
-    /// Retrieve a session
-    /// 
-    /// - Parameter request: A ``Operations/GetSessionRequest`` object describing the input to the API operation
     /// - Returns: A ``Operations/GetSessionResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getSession(request: Operations.GetSessionRequest) async throws -> Response<Operations.GetSessionResponse>
-
+    func getSession() async throws -> Response<Operations.GetSessionResponse>
+    /// Retrieve a session
+    /// 
+    /// - Parameter request: A ``Operations/GetSessionIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetSessionIdResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func getSessionId(request: Operations.GetSessionIdRequest) async throws -> Response<Operations.GetSessionIdResponse>
     /// Retrieve Recorded Sessions
     /// 
-    /// - Parameter request: A ``Operations/GetRecordedSessionsRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetRecordedSessionsResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetStreamParentIdSessionsRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetStreamParentIdSessionsResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getRecordedSessions(request: Operations.GetRecordedSessionsRequest) async throws -> Response<Operations.GetRecordedSessionsResponse>
-}
-
-// MARK: - AccessControlAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getSigningKeys()``
-/// - ``createSigningKey()``
-/// - ``deleteSigningKey(request:)``
-/// - ``getSigningKey(request:)``
-/// - ``updateSigningKey(request:)``
-///
-public protocol AccessControlAPI {
+    func getStreamParentIdSessions(request: Operations.GetStreamParentIdSessionsRequest) async throws -> Response<Operations.GetStreamParentIdSessionsResponse>
     /// Retrieves signing keys
     /// 
-    /// - Returns: A ``Operations/GetSigningKeysResponse`` object describing the result of the API operation
+    /// - Returns: A ``Operations/GetAccessControlSigningKeyResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getSigningKeys() async throws -> Response<Operations.GetSigningKeysResponse>
-
-    /// Create a signing key
+    func getAccessControlSigningKey() async throws -> Response<Operations.GetAccessControlSigningKeyResponse>
     /// 
-    /// - Returns: A ``Operations/CreateSigningKeyResponse`` object describing the result of the API operation
+    /// The publicKey is a representation of the public key, encoded as base 64 and is passed as a string, and  the privateKey is displayed only on creation. This is the only moment where the client can save the private key, otherwise it will be lost. Remember to decode your string when signing JWTs.
+    /// Up to 10 signing keys can be generated, after that you must delete at least one signing key to create a new one.
+    /// 
+    /// 
+    /// - Returns: A ``Operations/PostAccessControlSigningKeyResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func createSigningKey() async throws -> Response<Operations.CreateSigningKeyResponse>
-
+    func postAccessControlSigningKey() async throws -> Response<Operations.PostAccessControlSigningKeyResponse>
     /// Delete Signing Key
     /// 
-    /// - Parameter request: A ``Operations/DeleteSigningKeyRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/DeleteSigningKeyResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/DeleteAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/DeleteAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func deleteSigningKey(request: Operations.DeleteSigningKeyRequest) async throws -> Response<Operations.DeleteSigningKeyResponse>
-
+    func deleteAccessControlSigningKeyKeyId(request: Operations.DeleteAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.DeleteAccessControlSigningKeyKeyIdResponse>
     /// Retrieves a signing key
     /// 
-    /// - Parameter request: A ``Operations/GetSigningKeyRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetSigningKeyResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getSigningKey(request: Operations.GetSigningKeyRequest) async throws -> Response<Operations.GetSigningKeyResponse>
-
+    func getAccessControlSigningKeyKeyId(request: Operations.GetAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.GetAccessControlSigningKeyKeyIdResponse>
     /// Update a signing key
     /// 
-    /// - Parameter request: A ``Operations/UpdateSigningKeyRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/UpdateSigningKeyResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/PatchAccessControlSigningKeyKeyIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PatchAccessControlSigningKeyKeyIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func updateSigningKey(request: Operations.UpdateSigningKeyRequest) async throws -> Response<Operations.UpdateSigningKeyResponse>
-}
-
-// MARK: - TaskAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getTasks()``
-/// - ``getTask(request:)``
-///
-public protocol TaskAPI {
+    func patchAccessControlSigningKeyKeyId(request: Operations.PatchAccessControlSigningKeyKeyIdRequest) async throws -> Response<Operations.PatchAccessControlSigningKeyKeyIdResponse>
     /// Retrieve Tasks
     /// 
-    /// - Returns: A ``Operations/GetTasksResponse`` object describing the result of the API operation
-    /// - Throws: An error of type ``LivepeerError``
-    func getTasks() async throws -> Response<Operations.GetTasksResponse>
-
-    /// Retrieve a Task
-    /// 
-    /// - Parameter request: A ``Operations/GetTaskRequest`` object describing the input to the API operation
     /// - Returns: A ``Operations/GetTaskResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getTask(request: Operations.GetTaskRequest) async throws -> Response<Operations.GetTaskResponse>
-}
-
-// MARK: - TranscodeAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``transcode(request:)``
-///
-public protocol TranscodeAPI {
-    /// Transcode a video
+    func getTask() async throws -> Response<Operations.GetTaskResponse>
+    /// Retrieve a Task
     /// 
-    /// - Parameter request: A ``Shared/TaskInput`` object describing the input to the API operation
-    /// - Returns: A ``Operations/TranscodeResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetTaskTaskIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetTaskTaskIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func transcode(request: Shared.TaskInput) async throws -> Response<Operations.TranscodeResponse>
-}
-
-// MARK: - PlaybackAPI
-/// ## Topics
-///
-/// ### API calls
-///
-/// - ``getPlaybackInfo(request:)``
-///
-public protocol PlaybackAPI {
+    func getTaskTaskId(request: Operations.GetTaskTaskIdRequest) async throws -> Response<Operations.GetTaskTaskIdResponse>
+    /// `POST /transcode` transcodes a video file and uploads the results to the
+    /// specified storage service. 
+    /// \
+    /// \
+    /// Transcoding is asynchronous so you will need to check the status of the
+    /// task in order to determine when transcoding is complete. The `id` field
+    /// in the response is the unique ID for the transcoding `Task`. The task
+    /// status can be queried using the [GET tasks
+    /// endpoint](https://docs.livepeer.org/reference/api/get-tasks):
+    /// \
+    /// \
+    /// When `status.phase` is `completed`,  transcoding will be complete and
+    /// the results will be stored in the storage service and the specified
+    /// output location.
+    /// \
+    /// \
+    /// The results will be available under `params.outputs.hls.path` and
+    /// `params.outputs.mp4.path` in the specified storage service.
+    /// ## Input
+    /// \
+    /// This endpoint currently supports the following inputs:
+    /// - HTTP
+    /// - S3 API Compatible Service
+    /// \
+    /// \
+    /// **HTTP**
+    /// \
+    /// A public HTTP URL can be used to read a video file.
+    /// ```json
+    /// {
+    ///     "url": "https://www.example.com/video.mp4"
+    /// }
+    /// ```
+    /// | Name | Type   | Description                          |
+    /// | ---- | ------ | ------------------------------------ |
+    /// | url  | string | A public HTTP URL for the video file. |
+    /// 
+    /// Note: For IPFS HTTP gateway URLs, the API currently only supports “path
+    /// style” URLs and does not support “subdomain style” URLs. The API will
+    /// support both styles of URLs in a future update.
+    /// \
+    /// \
+    /// **S3 API Compatible Service**
+    /// \
+    /// \
+    /// S3 credentials can be used to authenticate with a S3 API compatible
+    /// service to read a video file.
+    /// 
+    /// ```json
+    /// {
+    ///     "type": "s3",
+    ///     "endpoint": "https://gateway.storjshare.io",
+    ///     "credentials": {
+    ///         "accessKeyId": "$ACCESS_KEY_ID",
+    ///         "secretAccessKey": "$SECRET_ACCESS_KEY"
+    ///     },
+    ///     "bucket": "inbucket",
+    ///     "path": "/video/source.mp4"
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// ## Storage
+    /// \
+    /// This endpoint currently supports the following storage services:
+    /// - S3 API Compatible Service
+    /// - Web3 Storage
+    /// \
+    /// \
+    /// **S3 API Compatible Service**
+    /// ```json
+    /// {
+    ///   "type": "s3",
+    ///     "endpoint": "https://gateway.storjshare.io",
+    ///     "credentials": {
+    ///         "accessKeyId": "$ACCESS_KEY_ID",
+    ///         "secretAccessKey": "$SECRET_ACCESS_KEY"
+    ///     },
+    ///     "bucket": "mybucket"
+    /// }
+    /// ```
+    /// 
+    /// **Web3 Storage**
+    /// 
+    /// ```json
+    /// {
+    ///   "type": "web3.storage",
+    ///     "credentials": {
+    ///         "proof": "$UCAN_DELEGATION_PROOF",
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// 
+    /// ## Outputs
+    /// \
+    /// This endpoint currently supports the following output types:
+    /// - HLS
+    /// - MP4
+    /// 
+    /// **HLS**
+    /// 
+    /// ```json
+    /// {
+    ///   "hls": {
+    ///         "path": "/samplevideo/hls"
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// **MP4**
+    /// 
+    /// ```json
+    /// {
+    ///   "mp4": {
+    ///         "path": "/samplevideo/mp4"
+    ///     }
+    /// }
+    /// ```
+    /// 
+    /// 
+    /// - Parameter request: A ``Shared/TranscodePayload`` object describing the input to the API operation
+    /// - Returns: A ``Operations/PostTranscodeResponse`` object describing the result of the API operation
+    /// - Throws: An error of type ``LivepeerError``
+    func postTranscode(request: Shared.TranscodePayload) async throws -> Response<Operations.PostTranscodeResponse>
     /// Retrieve Playback Info
     /// 
-    /// - Parameter request: A ``Operations/GetPlaybackInfoRequest`` object describing the input to the API operation
-    /// - Returns: A ``Operations/GetPlaybackInfoResponse`` object describing the result of the API operation
+    /// - Parameter request: A ``Operations/GetPlaybackIdRequest`` object describing the input to the API operation
+    /// - Returns: A ``Operations/GetPlaybackIdResponse`` object describing the result of the API operation
     /// - Throws: An error of type ``LivepeerError``
-    func getPlaybackInfo(request: Operations.GetPlaybackInfoRequest) async throws -> Response<Operations.GetPlaybackInfoResponse>
+    func getPlaybackId(request: Operations.GetPlaybackIdRequest) async throws -> Response<Operations.GetPlaybackIdResponse>
 }

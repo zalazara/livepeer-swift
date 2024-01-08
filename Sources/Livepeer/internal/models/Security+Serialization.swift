@@ -7,7 +7,7 @@ extension Shared.Security: SecurityParameterProviding {
     func securityParameters() -> [SecurityParameter] {
         switch self {
         case .apiKey(let value):
-            return [.httpBearer(value: value)]
+            return [.apiKey(name: "Authorization", value: value)]
         }
     }
 }

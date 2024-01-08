@@ -7,5 +7,7 @@ extension Shared {
         case html5ApplicationVndAppleMpegurl = "html5/application/vnd.apple.mpegurl"
         case html5VideoMp4 = "html5/video/mp4"
         case html5VideoH264 = "html5/video/h264"
+        case imageJpeg = "image/jpeg"
+        case textVtt = "text/vtt"
     }
 }

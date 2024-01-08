@@ -9,6 +9,8 @@ extension Shared {
         public let name: String
         /// Whether a user is allowed to publish audio/video tracks
         public let canPublish: Bool?
+        /// Whether a user is allowed to publish data messages to the room
+        public let canPublishData: Bool?
         /// User defined payload to store for the participant
         public let metadata: String?
 
@@ -16,11 +18,13 @@ extension Shared {
         ///
         /// - Parameter name: Display name
         /// - Parameter canPublish: Whether a user is allowed to publish audio/video tracks
+        /// - Parameter canPublishData: Whether a user is allowed to publish data messages to the room
         /// - Parameter metadata: User defined payload to store for the participant
         ///
-        public init(name: String, canPublish: Bool? = nil, metadata: String? = nil) {
+        public init(name: String, canPublish: Bool? = nil, canPublishData: Bool? = nil, metadata: String? = nil) {
             self.name = name
             self.canPublish = canPublish
+            self.canPublishData = canPublishData
             self.metadata = metadata
         }
     }
@@ -30,6 +34,7 @@ extension Shared.RoomUserPayload: Codable {
     enum CodingKeys: String, CodingKey {
         case name
         case canPublish
+        case canPublishData
         case metadata
     }
 }

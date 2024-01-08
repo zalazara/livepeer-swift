@@ -6,7 +6,7 @@ extension Operations {
     /// A response model
     public enum GetMultistreamTargetResponse {
         case empty
-        case multistreamTarget(Shared.MultistreamTarget)
+        case classes([Shared.MultistreamTarget])
 
         var isEmpty: Bool {
             if case .empty = self {
@@ -16,8 +16,8 @@ extension Operations {
             }
         }
 
-        public func multistreamTarget() throws -> Shared.MultistreamTarget {
-            guard case .multistreamTarget(let value) = self else {
+        public func classes() throws -> [Shared.MultistreamTarget] {
+            guard case .classes(let value) = self else {
                 throw LivepeerError.missingResponseData
             }
             return value

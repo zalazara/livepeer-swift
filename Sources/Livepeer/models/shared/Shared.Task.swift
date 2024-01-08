@@ -5,7 +5,6 @@ import Foundation
 extension Shared {
     /// A model object
     public struct Task {
-        public let clip: Shared.Clip?
         /// Timestamp (in milliseconds) at which task was created
         @DecimalSerialized
         public private(set) var createdAt: Double?
@@ -18,7 +17,9 @@ extension Shared {
         /// ID of the output asset
         public let outputAssetId: String?
         /// Parameters of the task
-        public let params: Shared.TaskParams?
+        public let params: Shared.Params?
+        /// ID of the requester hash(IP + SALT + PlaybackId)
+        public let requesterId: String?
         /// Timestamp (in milliseconds) at which the task was scheduled for
         /// execution (e.g. after file upload finished).
         /// 
@@ -37,20 +38,21 @@ extension Shared {
         /// - Parameter output: Output of the task
         /// - Parameter outputAssetId: ID of the output asset
         /// - Parameter params: Parameters of the task
+        /// - Parameter requesterId: ID of the requester hash(IP + SALT + PlaybackId)
         /// - Parameter scheduledAt: Timestamp (in milliseconds) at which the task was scheduled for
         /// execution (e.g. after file upload finished).
         /// 
         /// - Parameter status: Status of the task
         /// - Parameter type: Type of the task
         ///
-        public init(clip: Shared.Clip? = nil, createdAt: Double? = nil, id: String? = nil, inputAssetId: String? = nil, output: Shared.Output? = nil, outputAssetId: String? = nil, params: Shared.TaskParams? = nil, scheduledAt: Double? = nil, status: Shared.TaskStatus? = nil, type: Shared.TaskType? = nil) {
-            self.clip = clip
+        public init(createdAt: Double? = nil, id: String? = nil, inputAssetId: String? = nil, output: Shared.Output? = nil, outputAssetId: String? = nil, params: Shared.Params? = nil, requesterId: String? = nil, scheduledAt: Double? = nil, status: Shared.TaskStatus? = nil, type: Shared.TaskType? = nil) {
             self._createdAt = DecimalSerialized<Double?>(wrappedValue: createdAt)
             self.id = id
             self.inputAssetId = inputAssetId
             self.output = output
             self.outputAssetId = outputAssetId
             self.params = params
+            self.requesterId = requesterId
             self._scheduledAt = DecimalSerialized<Double?>(wrappedValue: scheduledAt)
             self.status = status
             self.type = type
@@ -60,13 +62,13 @@ extension Shared {
 
 extension Shared.Task: Codable {
     enum CodingKeys: String, CodingKey {
-        case clip
         case createdAt
         case id
         case inputAssetId
         case output
         case outputAssetId
         case params
+        case requesterId
         case scheduledAt
         case status
         case type
@@ -74,13 +76,13 @@ extension Shared.Task: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.clip = try container.decodeIfPresent(Shared.Clip.self, forKey: .clip)
         self._createdAt = try container.decodeIfPresent(DecimalSerialized<Double?>.self, forKey: .createdAt) ?? DecimalSerialized<Double?>(wrappedValue: nil)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
         self.inputAssetId = try container.decodeIfPresent(String.self, forKey: .inputAssetId)
         self.output = try container.decodeIfPresent(Shared.Output.self, forKey: .output)
         self.outputAssetId = try container.decodeIfPresent(String.self, forKey: .outputAssetId)
-        self.params = try container.decodeIfPresent(Shared.TaskParams.self, forKey: .params)
+        self.params = try container.decodeIfPresent(Shared.Params.self, forKey: .params)
+        self.requesterId = try container.decodeIfPresent(String.self, forKey: .requesterId)
         self._scheduledAt = try container.decodeIfPresent(DecimalSerialized<Double?>.self, forKey: .scheduledAt) ?? DecimalSerialized<Double?>(wrappedValue: nil)
         self.status = try container.decodeIfPresent(Shared.TaskStatus.self, forKey: .status)
         self.type = try container.decodeIfPresent(Shared.TaskType.self, forKey: .type)
@@ -88,7 +90,6 @@ extension Shared.Task: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.clip, forKey: .clip)
         if self.createdAt != nil {
             try container.encode(self._createdAt, forKey: .createdAt)
         }
@@ -97,6 +98,7 @@ extension Shared.Task: Codable {
         try container.encodeIfPresent(self.output, forKey: .output)
         try container.encodeIfPresent(self.outputAssetId, forKey: .outputAssetId)
         try container.encodeIfPresent(self.params, forKey: .params)
+        try container.encodeIfPresent(self.requesterId, forKey: .requesterId)
         if self.scheduledAt != nil {
             try container.encode(self._scheduledAt, forKey: .scheduledAt)
         }

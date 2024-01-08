@@ -3,31 +3,24 @@
 import Foundation
 
 extension Shared {
-    /// A model object
-    public enum ExportTaskParams1 {
-        case exportTaskParamsSchemas1(Shared.ExportTaskParamsSchemas1)
-        case exportTaskParamsSchemas2(Shared.ExportTaskParamsSchemas2)
+    /// Parameters for the export task
+    public struct ExportTaskParams1 {
+        /// custom URL parameters for the export task
+        public let custom: Shared.Custom
+
+        /// Creates an object with the specified parameters
+        ///
+        /// - Parameter custom: custom URL parameters for the export task
+        ///
+        public init(custom: Shared.Custom) {
+            self.custom = custom
+        }
     }
 }
 
 extension Shared.ExportTaskParams1: Codable {
-    public init(from decoder: Decoder) throws {
-        if let value = try? Shared.ExportTaskParamsSchemas1(from: decoder) {
-            self = .exportTaskParamsSchemas1(value)
-        } else if let value = try? Shared.ExportTaskParamsSchemas2(from: decoder) {
-            self = .exportTaskParamsSchemas2(value)
-        } else {
-            throw LivepeerError.failedToHandleResponse(.failedToDecodeResponse)
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        switch self {
-        case .exportTaskParamsSchemas1(let value):
-            try value.encode(to: encoder)
-        case .exportTaskParamsSchemas2(let value):
-            try value.encode(to: encoder)
-        }
+    enum CodingKeys: String, CodingKey {
+        case custom
     }
 }
 

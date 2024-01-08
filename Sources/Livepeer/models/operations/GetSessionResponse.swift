@@ -6,7 +6,7 @@ extension Operations {
     /// A response model
     public enum GetSessionResponse {
         case empty
-        case session(Shared.Session)
+        case classes([Shared.Session])
 
         var isEmpty: Bool {
             if case .empty = self {
@@ -16,8 +16,8 @@ extension Operations {
             }
         }
 
-        public func session() throws -> Shared.Session {
-            guard case .session(let value) = self else {
+        public func classes() throws -> [Shared.Session] {
+            guard case .classes(let value) = self else {
                 throw LivepeerError.missingResponseData
             }
             return value

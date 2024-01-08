@@ -5,24 +5,20 @@ import Foundation
 extension Shared {
     /// Parameters for the upload task
     public struct Upload {
+        /// Decides if the output video should include C2PA signature
+        public let c2pa: Bool?
         public let encryption: Shared.Encryption?
-        /// ID of the original recorded session to avoid re-transcoding
-        /// of the same content. Only used for import task.
-        /// 
-        public let recordedSessionId: String?
         /// URL of the asset to "upload"
         public let url: String?
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter recordedSessionId: ID of the original recorded session to avoid re-transcoding
-        /// of the same content. Only used for import task.
-        /// 
+        /// - Parameter c2pa: Decides if the output video should include C2PA signature
         /// - Parameter url: URL of the asset to "upload"
         ///
-        public init(encryption: Shared.Encryption? = nil, recordedSessionId: String? = nil, url: String? = nil) {
+        public init(c2pa: Bool? = nil, encryption: Shared.Encryption? = nil, url: String? = nil) {
+            self.c2pa = c2pa
             self.encryption = encryption
-            self.recordedSessionId = recordedSessionId
             self.url = url
         }
     }
@@ -30,8 +26,8 @@ extension Shared {
 
 extension Shared.Upload: Codable {
     enum CodingKeys: String, CodingKey {
+        case c2pa
         case encryption
-        case recordedSessionId
         case url
     }
 }

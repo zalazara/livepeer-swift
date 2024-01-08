@@ -3,28 +3,31 @@
 import Foundation
 
 extension Shared {
-    /// Input video file to transcode
-    public struct Input {
-        /// URL of a video to transcode, accepts object-store format
-        /// "s3+https"
-        /// 
-        public let url: String?
-
-        /// Creates an object with the specified parameters
-        ///
-        /// - Parameter url: URL of a video to transcode, accepts object-store format
-        /// "s3+https"
-        /// 
-        ///
-        public init(url: String? = nil) {
-            self.url = url
-        }
+    /// A model object
+    public enum Input {
+        case transcodePayload1(Shared.TranscodePayload1)
+        case transcodePayload2(Shared.TranscodePayload2)
     }
 }
 
 extension Shared.Input: Codable {
-    enum CodingKeys: String, CodingKey {
-        case url
+    public init(from decoder: Decoder) throws {
+        if let value = try? Shared.TranscodePayload1(from: decoder) {
+            self = .transcodePayload1(value)
+        } else if let value = try? Shared.TranscodePayload2(from: decoder) {
+            self = .transcodePayload2(value)
+        } else {
+            throw LivepeerError.failedToHandleResponse(.failedToDecodeResponse)
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        switch self {
+        case .transcodePayload1(let value):
+            try value.encode(to: encoder)
+        case .transcodePayload2(let value):
+            try value.encode(to: encoder)
+        }
     }
 }
 

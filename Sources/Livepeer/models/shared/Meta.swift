@@ -7,6 +7,7 @@ extension Shared {
     public struct Meta {
         public let source: [Shared.PlaybackInfoSource]
         public let attestation: Shared.Attestation?
+        public let dvrPlayback: [Shared.DvrPlayback]?
         @DecimalSerialized
         public private(set) var live: Double?
         /// Whether the playback policy for a asset or stream is public or signed
@@ -16,9 +17,10 @@ extension Shared {
         ///
         /// - Parameter playbackPolicy: Whether the playback policy for a asset or stream is public or signed
         ///
-        public init(source: [Shared.PlaybackInfoSource], attestation: Shared.Attestation? = nil, live: Double? = nil, playbackPolicy: Shared.PlaybackPolicy? = nil) {
+        public init(source: [Shared.PlaybackInfoSource], attestation: Shared.Attestation? = nil, dvrPlayback: [Shared.DvrPlayback]? = nil, live: Double? = nil, playbackPolicy: Shared.PlaybackPolicy? = nil) {
             self.source = source
             self.attestation = attestation
+            self.dvrPlayback = dvrPlayback
             self._live = DecimalSerialized<Double?>(wrappedValue: live)
             self.playbackPolicy = playbackPolicy
         }
@@ -29,6 +31,7 @@ extension Shared.Meta: Codable {
     enum CodingKeys: String, CodingKey {
         case source
         case attestation
+        case dvrPlayback
         case live
         case playbackPolicy
     }
@@ -37,6 +40,7 @@ extension Shared.Meta: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.source = try container.decode([Shared.PlaybackInfoSource].self, forKey: .source)
         self.attestation = try container.decodeIfPresent(Shared.Attestation.self, forKey: .attestation)
+        self.dvrPlayback = try container.decodeIfPresent([Shared.DvrPlayback].self, forKey: .dvrPlayback)
         self._live = try container.decodeIfPresent(DecimalSerialized<Double?>.self, forKey: .live) ?? DecimalSerialized<Double?>(wrappedValue: nil)
         self.playbackPolicy = try container.decodeIfPresent(Shared.PlaybackPolicy.self, forKey: .playbackPolicy)
     }
@@ -45,6 +49,7 @@ extension Shared.Meta: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.source, forKey: .source)
         try container.encodeIfPresent(self.attestation, forKey: .attestation)
+        try container.encodeIfPresent(self.dvrPlayback, forKey: .dvrPlayback)
         if self.live != nil {
             try container.encode(self._live, forKey: .live)
         }

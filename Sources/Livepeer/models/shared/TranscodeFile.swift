@@ -5,12 +5,14 @@ import Foundation
 extension Shared {
     /// Parameters for the transcode-file task
     public struct TranscodeFile {
+        /// Decides if the output video should include C2PA signature
+        public let c2pa: Bool?
         public let creatorId: Shared.InputCreatorId?
         /// Input video file to transcode
-        public let input: Shared.Input?
+        public let input: Shared.TaskInput?
         /// Output formats
-        public let outputs: Shared.Outputs?
-        public let profiles: [Shared.FfmpegProfile]?
+        public let outputs: Shared.TaskOutputs?
+        public let profiles: [Shared.TranscodeProfile]?
         /// Storage for the output files
         public let storage: Shared.TaskStorage?
         /// How many seconds the duration of each output segment should
@@ -21,6 +23,7 @@ extension Shared {
 
         /// Creates an object with the specified parameters
         ///
+        /// - Parameter c2pa: Decides if the output video should include C2PA signature
         /// - Parameter input: Input video file to transcode
         /// - Parameter outputs: Output formats
         /// - Parameter storage: Storage for the output files
@@ -28,7 +31,8 @@ extension Shared {
         /// be
         /// 
         ///
-        public init(creatorId: Shared.InputCreatorId? = nil, input: Shared.Input? = nil, outputs: Shared.Outputs? = nil, profiles: [Shared.FfmpegProfile]? = nil, storage: Shared.TaskStorage? = nil, targetSegmentSizeSecs: Double? = nil) {
+        public init(c2pa: Bool? = nil, creatorId: Shared.InputCreatorId? = nil, input: Shared.TaskInput? = nil, outputs: Shared.TaskOutputs? = nil, profiles: [Shared.TranscodeProfile]? = nil, storage: Shared.TaskStorage? = nil, targetSegmentSizeSecs: Double? = nil) {
+            self.c2pa = c2pa
             self.creatorId = creatorId
             self.input = input
             self.outputs = outputs
@@ -41,6 +45,7 @@ extension Shared {
 
 extension Shared.TranscodeFile: Codable {
     enum CodingKeys: String, CodingKey {
+        case c2pa
         case creatorId
         case input
         case outputs
@@ -51,16 +56,18 @@ extension Shared.TranscodeFile: Codable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.c2pa = try container.decodeIfPresent(Bool.self, forKey: .c2pa)
         self.creatorId = try container.decodeIfPresent(Shared.InputCreatorId.self, forKey: .creatorId)
-        self.input = try container.decodeIfPresent(Shared.Input.self, forKey: .input)
-        self.outputs = try container.decodeIfPresent(Shared.Outputs.self, forKey: .outputs)
-        self.profiles = try container.decodeIfPresent([Shared.FfmpegProfile].self, forKey: .profiles)
+        self.input = try container.decodeIfPresent(Shared.TaskInput.self, forKey: .input)
+        self.outputs = try container.decodeIfPresent(Shared.TaskOutputs.self, forKey: .outputs)
+        self.profiles = try container.decodeIfPresent([Shared.TranscodeProfile].self, forKey: .profiles)
         self.storage = try container.decodeIfPresent(Shared.TaskStorage.self, forKey: .storage)
         self._targetSegmentSizeSecs = try container.decodeIfPresent(DecimalSerialized<Double?>.self, forKey: .targetSegmentSizeSecs) ?? DecimalSerialized<Double?>(wrappedValue: nil)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(self.c2pa, forKey: .c2pa)
         try container.encodeIfPresent(self.creatorId, forKey: .creatorId)
         try container.encodeIfPresent(self.input, forKey: .input)
         try container.encodeIfPresent(self.outputs, forKey: .outputs)

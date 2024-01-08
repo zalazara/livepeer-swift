@@ -6,14 +6,34 @@ extension Shared {
     /// A model object
     public struct Three {
         public let type: Shared.AssetSchemasSource3Type
-        public let encryption: Shared.EncryptionOutput?
+        /// ID of the asset from which this asset was created
+        public let assetId: String?
+        public let encryption: Shared.Encryption?
+        /// Playback ID of the asset or stream from which this asset was created
+        public let playbackId: String?
+        /// ID of the requester from which this asset was created
+        public let requesterId: String?
+        /// ID of the session from which this asset was created
+        public let sessionId: String?
+        /// ID of the asset or stream from which this asset was created
+        public let sourceId: String?
 
         /// Creates an object with the specified parameters
         ///
+        /// - Parameter assetId: ID of the asset from which this asset was created
+        /// - Parameter playbackId: Playback ID of the asset or stream from which this asset was created
+        /// - Parameter requesterId: ID of the requester from which this asset was created
+        /// - Parameter sessionId: ID of the session from which this asset was created
+        /// - Parameter sourceId: ID of the asset or stream from which this asset was created
         ///
-        public init(type: Shared.AssetSchemasSource3Type, encryption: Shared.EncryptionOutput? = nil) {
+        public init(type: Shared.AssetSchemasSource3Type, assetId: String? = nil, encryption: Shared.Encryption? = nil, playbackId: String? = nil, requesterId: String? = nil, sessionId: String? = nil, sourceId: String? = nil) {
             self.type = type
+            self.assetId = assetId
             self.encryption = encryption
+            self.playbackId = playbackId
+            self.requesterId = requesterId
+            self.sessionId = sessionId
+            self.sourceId = sourceId
         }
     }
 }
@@ -21,7 +41,12 @@ extension Shared {
 extension Shared.Three: Codable {
     enum CodingKeys: String, CodingKey {
         case type
+        case assetId
         case encryption
+        case playbackId
+        case requesterId
+        case sessionId
+        case sourceId
     }
 }
 

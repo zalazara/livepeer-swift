@@ -9,12 +9,12 @@ extension Shared {
         /// IPFS. Will be deep merged with the default metadata
         /// exported.
         /// 
-        public let nftMetadata: Shared.SpecNftMetadata?
+        public let nftMetadata: Shared.NftMetadata?
         /// Name of the NFT metadata template to export. 'player'
         /// will embed the Livepeer Player on the NFT while 'file'
         /// will reference only the immutable MP4 files.
         /// 
-        public let nftMetadataTemplate: Shared.SpecNftMetadataTemplate?
+        public let nftMetadataTemplate: Shared.NftMetadataTemplate?
 
         /// Creates an object with the specified parameters
         ///
@@ -27,7 +27,7 @@ extension Shared {
         /// will reference only the immutable MP4 files.
         /// 
         ///
-        public init(nftMetadata: Shared.SpecNftMetadata? = nil, nftMetadataTemplate: Shared.SpecNftMetadataTemplate? = nil) {
+        public init(nftMetadata: Shared.NftMetadata? = nil, nftMetadataTemplate: Shared.NftMetadataTemplate? = nil) {
             self.nftMetadata = nftMetadata
             self.nftMetadataTemplate = nftMetadataTemplate
         }

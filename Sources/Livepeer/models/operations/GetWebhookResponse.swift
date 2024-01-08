@@ -6,7 +6,7 @@ extension Operations {
     /// A response model
     public enum GetWebhookResponse {
         case empty
-        case webhook(Shared.Webhook)
+        case classes([Shared.Webhook])
 
         var isEmpty: Bool {
             if case .empty = self {
@@ -16,8 +16,8 @@ extension Operations {
             }
         }
 
-        public func webhook() throws -> Shared.Webhook {
-            guard case .webhook(let value) = self else {
+        public func classes() throws -> [Shared.Webhook] {
+            guard case .classes(let value) = self else {
                 throw LivepeerError.missingResponseData
             }
             return value

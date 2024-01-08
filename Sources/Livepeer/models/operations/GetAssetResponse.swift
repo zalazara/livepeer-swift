@@ -6,7 +6,7 @@ extension Operations {
     /// A response model
     public enum GetAssetResponse {
         case empty
-        case asset(Shared.Asset)
+        case classes([Shared.Asset])
 
         var isEmpty: Bool {
             if case .empty = self {
@@ -16,8 +16,8 @@ extension Operations {
             }
         }
 
-        public func asset() throws -> Shared.Asset {
-            guard case .asset(let value) = self else {
+        public func classes() throws -> [Shared.Asset] {
+            guard case .classes(let value) = self else {
                 throw LivepeerError.missingResponseData
             }
             return value

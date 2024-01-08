@@ -5,58 +5,42 @@ import Foundation
 extension Shared {
     /// A model object
     public struct AttestationIpfs {
-        /// CID of the file on IPFS
-        public let cid: String?
-        /// URL to access file via HTTP through an IPFS gateway
-        public let gatewayUrl: String?
+        public let dollarRef: AnyValue?
         /// Timestamp (in milliseconds) at which IPFS export task was updated
         /// 
         @DecimalSerialized
         public private(set) var updatedAt: Double?
-        /// URL with IPFS scheme for the file
-        public let url: String?
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter cid: CID of the file on IPFS
-        /// - Parameter gatewayUrl: URL to access file via HTTP through an IPFS gateway
         /// - Parameter updatedAt: Timestamp (in milliseconds) at which IPFS export task was updated
         /// 
-        /// - Parameter url: URL with IPFS scheme for the file
         ///
-        public init(cid: String? = nil, gatewayUrl: String? = nil, updatedAt: Double? = nil, url: String? = nil) {
-            self.cid = cid
-            self.gatewayUrl = gatewayUrl
+        public init(dollarRef: AnyValue? = nil, updatedAt: Double? = nil) {
+            self.dollarRef = dollarRef
             self._updatedAt = DecimalSerialized<Double?>(wrappedValue: updatedAt)
-            self.url = url
         }
     }
 }
 
 extension Shared.AttestationIpfs: Codable {
     enum CodingKeys: String, CodingKey {
-        case cid
-        case gatewayUrl
+        case dollarRef = "$ref"
         case updatedAt
-        case url
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.cid = try container.decodeIfPresent(String.self, forKey: .cid)
-        self.gatewayUrl = try container.decodeIfPresent(String.self, forKey: .gatewayUrl)
+        self.dollarRef = try container.decodeIfPresent(AnyValue.self, forKey: .dollarRef)
         self._updatedAt = try container.decodeIfPresent(DecimalSerialized<Double?>.self, forKey: .updatedAt) ?? DecimalSerialized<Double?>(wrappedValue: nil)
-        self.url = try container.decodeIfPresent(String.self, forKey: .url)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.cid, forKey: .cid)
-        try container.encodeIfPresent(self.gatewayUrl, forKey: .gatewayUrl)
+        try container.encodeIfPresent(self.dollarRef, forKey: .dollarRef)
         if self.updatedAt != nil {
             try container.encode(self._updatedAt, forKey: .updatedAt)
         }
-        try container.encodeIfPresent(self.url, forKey: .url)
     }
 }
 

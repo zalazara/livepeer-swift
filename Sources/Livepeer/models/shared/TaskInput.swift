@@ -3,47 +3,28 @@
 import Foundation
 
 extension Shared {
-    /// A model object
+    /// Input video file to transcode
     public struct TaskInput {
-        public let clip: Shared.Clip?
-        /// ID of the input asset
-        public let inputAssetId: String?
-        /// Output of the task
-        public let output: Shared.TaskOutput?
-        /// ID of the output asset
-        public let outputAssetId: String?
-        /// Parameters of the task
-        public let params: Shared.Params?
-        /// Type of the task
-        public let type: Shared.TaskType?
+        /// URL of a video to transcode, accepts object-store format
+        /// "s3+https"
+        /// 
+        public let url: String?
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter inputAssetId: ID of the input asset
-        /// - Parameter output: Output of the task
-        /// - Parameter outputAssetId: ID of the output asset
-        /// - Parameter params: Parameters of the task
-        /// - Parameter type: Type of the task
+        /// - Parameter url: URL of a video to transcode, accepts object-store format
+        /// "s3+https"
+        /// 
         ///
-        public init(clip: Shared.Clip? = nil, inputAssetId: String? = nil, output: Shared.TaskOutput? = nil, outputAssetId: String? = nil, params: Shared.Params? = nil, type: Shared.TaskType? = nil) {
-            self.clip = clip
-            self.inputAssetId = inputAssetId
-            self.output = output
-            self.outputAssetId = outputAssetId
-            self.params = params
-            self.type = type
+        public init(url: String? = nil) {
+            self.url = url
         }
     }
 }
 
 extension Shared.TaskInput: Codable {
     enum CodingKeys: String, CodingKey {
-        case clip
-        case inputAssetId
-        case output
-        case outputAssetId
-        case params
-        case type
+        case url
     }
 }
 

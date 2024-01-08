@@ -8,7 +8,7 @@ extension Shared {
         public let type: Shared.AssetSchemasType
         /// URL from which the asset was uploaded
         public let url: String
-        public let encryption: Shared.EncryptionOutput?
+        public let encryption: Shared.Encryption?
         /// Gateway URL from asset if parsed from provided URL on upload.
         public let gatewayUrl: String?
 
@@ -17,7 +17,7 @@ extension Shared {
         /// - Parameter url: URL from which the asset was uploaded
         /// - Parameter gatewayUrl: Gateway URL from asset if parsed from provided URL on upload.
         ///
-        public init(type: Shared.AssetSchemasType, url: String, encryption: Shared.EncryptionOutput? = nil, gatewayUrl: String? = nil) {
+        public init(type: Shared.AssetSchemasType, url: String, encryption: Shared.Encryption? = nil, gatewayUrl: String? = nil) {
             self.type = type
             self.url = url
             self.encryption = encryption

@@ -6,7 +6,7 @@ extension Shared {
     /// A model object
     public struct Stream {
         public let name: String
-        /// Timestamp (in milliseconds) at which the stream object was created
+        /// Timestamp (in milliseconds) at which stream object was created
         @DecimalSerialized
         public private(set) var createdAt: Double?
         /// Name of the token used to create this object
@@ -30,7 +30,7 @@ extension Shared {
         /// Rate at which transcodedBytes increases (bytes/second)
         @DecimalSerialized
         public private(set) var outgoingRate: Double?
-        /// Points to the parent stream object
+        /// Points to parent stream object
         public let parentId: String?
         /// Used to form playback URL
         public let playbackId: String?
@@ -48,7 +48,7 @@ extension Shared {
         /// Duration of all the source segments, sec
         @DecimalSerialized
         public private(set) var sourceSegmentsDuration: Double?
-        /// Used to form the RTMP ingest URL
+        /// Used to form RTMP ingest URL
         public let streamKey: String?
         /// If currently suspended
         public let suspended: Bool?
@@ -62,7 +62,7 @@ extension Shared {
 
         /// Creates an object with the specified parameters
         ///
-        /// - Parameter createdAt: Timestamp (in milliseconds) at which the stream object was created
+        /// - Parameter createdAt: Timestamp (in milliseconds) at which stream object was created
         /// - Parameter createdByTokenName: Name of the token used to create this object
         /// - Parameter ingestRate: Rate at which sourceBytes increases (bytes/second)
         /// - Parameter isActive: If currently active
@@ -71,14 +71,14 @@ extension Shared {
         /// the stream, if any.
         /// 
         /// - Parameter outgoingRate: Rate at which transcodedBytes increases (bytes/second)
-        /// - Parameter parentId: Points to the parent stream object
+        /// - Parameter parentId: Points to parent stream object
         /// - Parameter playbackId: Used to form playback URL
         /// - Parameter playbackPolicy: Whether the playback policy for a asset or stream is public or signed
         /// - Parameter record: Should this stream be recorded? Uses default settings. For more
         /// customization, create and configure an object store.
         /// 
         /// - Parameter sourceSegmentsDuration: Duration of all the source segments, sec
-        /// - Parameter streamKey: Used to form the RTMP ingest URL
+        /// - Parameter streamKey: Used to form RTMP ingest URL
         /// - Parameter suspended: If currently suspended
         /// - Parameter transcodedSegmentsDuration: Duration of all the transcoded segments, sec
         ///

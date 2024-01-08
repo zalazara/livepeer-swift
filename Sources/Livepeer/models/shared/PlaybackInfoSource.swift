@@ -5,6 +5,7 @@ import Foundation
 extension Shared {
     /// A model object
     public struct PlaybackInfoSource {
+        /// Human Readable Name
         public let hrn: Shared.Hrn
         public let type: Shared.PlaybackInfoSchemasType
         public let url: String
@@ -19,6 +20,7 @@ extension Shared {
 
         /// Creates an object with the specified parameters
         ///
+        /// - Parameter hrn: Human Readable Name
         ///
         public init(hrn: Shared.Hrn, type: Shared.PlaybackInfoSchemasType, url: String, bitrate: Double? = nil, height: Double? = nil, size: Double? = nil, width: Double? = nil) {
             self.hrn = hrn
